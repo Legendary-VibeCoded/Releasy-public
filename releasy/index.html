@@ -36,6 +36,9 @@ details.faq[open] summary::after{content:"\2212"}
 details.faq summary:hover{background:#1C2233}
 details.faq summary:focus-visible{outline:2px solid #8FA2FF;outline-offset:3px}
 details.faq p{margin:0;padding:0 8px 22px;color:#A9B0C3;max-width:46em}
+.float-wrap{animation:floaty 6s ease-in-out infinite;will-change:transform}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-14px) rotate(-.25deg)}}
+@media (prefers-reduced-motion:reduce){.float-wrap{animation:none}}
 .shot{display:block;width:100%;padding:0;border:0;background:none;cursor:zoom-in;border-radius:14px;transition:transform .25s ease}
 .shot:hover{transform:translateY(-2px)}
 .shot:focus-visible{outline:2px solid #8FA2FF;outline-offset:4px}
@@ -92,7 +95,7 @@ dialog#nosale button:focus-visible{outline:2px solid #8FA2FF;outline-offset:3px}
 
   <!-- app screenshot -->
   <div style="flex:1.5 1 460px;min-width:0">
-    <button type="button" class="shot" data-full="img/looks.webp" aria-label="Enlarge screenshot: the Look tab"><img src="img/looks.webp" alt="Releasy editor on the Look tab, with a grid of looks and a YouTube 16:9 preview" width="1442" height="932" style="display:block;width:100%;height:auto;border-radius:14px;border:1px solid #2A3147;box-shadow:0 30px 80px rgba(0,0,0,.5)"></button>
+    <div class="float-wrap"><button type="button" class="shot" data-full="img/looks.webp" aria-label="Enlarge screenshot: the Look tab"><img src="img/looks.webp" alt="Releasy editor on the Look tab, with a grid of looks and a YouTube 16:9 preview" width="1442" height="932" style="display:block;width:100%;height:auto;border-radius:14px;border:1px solid #2A3147;box-shadow:0 30px 80px rgba(0,0,0,.5)"></button></div>
   </div>
 </div>
 
