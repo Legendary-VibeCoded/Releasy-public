@@ -36,6 +36,12 @@ details.faq[open] summary::after{content:"\2212"}
 details.faq summary:hover{background:#1C2233}
 details.faq summary:focus-visible{outline:2px solid #8FA2FF;outline-offset:3px}
 details.faq p{margin:0;padding:0 8px 22px;color:#A9B0C3;max-width:46em}
+.shot{display:block;width:100%;padding:0;border:0;background:none;cursor:zoom-in;border-radius:14px;transition:transform .25s ease}
+.shot:hover{transform:translateY(-2px)}
+.shot:focus-visible{outline:2px solid #8FA2FF;outline-offset:4px}
+dialog#lb{border:0;padding:0;background:transparent;max-width:min(96vw,1442px);max-height:96vh;cursor:zoom-out;overflow:visible}
+dialog#lb::backdrop{background:rgba(5,6,9,.88)}
+dialog#lb img{display:block;max-width:100%;max-height:92vh;margin:0 auto;border-radius:12px;border:1px solid #2A3147}
 </style>
 </head>
 <body>
@@ -72,36 +78,9 @@ details.faq p{margin:0;padding:0 8px 22px;color:#A9B0C3;max-width:46em}
     <div style="font-size:14px;color:#A9B0C3">Everything runs on your own computer. No accounts, nothing uploaded.</div>
   </div>
 
-  <!-- app mock -->
-  <div style="flex:1 1 440px;min-width:0">
-    <div style="background:#151926;border:1px solid #2A3147;border-radius:16px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.5)">
-      <div style="display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid #2A3147;background:#11141F">
-        <span style="width:10px;height:10px;border-radius:50%;background:#2A3147"></span><span style="width:10px;height:10px;border-radius:50%;background:#2A3147"></span><span style="width:10px;height:10px;border-radius:50%;background:#2A3147"></span>
-        <span style="margin-left:10px;font-size:13px;color:#A9B0C3">Releasy · Working Title</span>
-      </div>
-      <div style="display:flex;gap:0;min-height:360px">
-        <div style="flex:0 0 36%;padding:16px;border-right:1px solid #2A3147;display:flex;flex-direction:column;gap:10px">
-          <div style="display:flex;gap:6px"><span style="padding:4px 10px;border-radius:6px;background:#26305F;color:#8FA2FF;font-size:12px">Look</span><span style="padding:4px 10px;border-radius:6px;background:#1C2233;color:#A9B0C3;font-size:12px">Text</span></div>
-          <div style="height:8px;border-radius:4px;background:#2A3147;width:70%"></div>
-          <div style="height:30px;border-radius:8px;background:#1C2233;border:1px solid #2A3147"></div>
-          <div style="height:8px;border-radius:4px;background:#2A3147;width:50%"></div>
-          <div style="display:flex;gap:6px"><span style="width:22px;height:22px;border-radius:50%;background:#6C4DF0"></span><span style="width:22px;height:22px;border-radius:50%;background:#E5527A"></span><span style="width:22px;height:22px;border-radius:50%;background:#F2B544"></span><span style="width:22px;height:22px;border-radius:50%;background:#3FB7A8"></span></div>
-          <div style="height:8px;border-radius:4px;background:#2A3147;width:60%"></div>
-          <div style="height:30px;border-radius:8px;background:#1C2233;border:1px solid #2A3147"></div>
-        </div>
-        <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:20px;background:#0F121B">
-          <div style="width:min(190px,100%);aspect-ratio:9/16;border-radius:16px;background:linear-gradient(160deg,#3A2A8F,#12142A 70%);border:1px solid #2A3147;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:14px;box-sizing:border-box">
-            <div style="font-size:10px;letter-spacing:.14em;color:#C9D1FF;text-transform:uppercase">New single</div>
-            <div style="width:62%;aspect-ratio:1;border-radius:10px;background:linear-gradient(135deg,#E5527A,#6C4DF0)"></div>
-            <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;text-align:center">Working Title</div>
-            <div style="display:flex;align-items:flex-end;gap:3px;height:30px">
-              <span style="width:4px;border-radius:2px;background:#8FA2FF;height:10px"></span><span style="width:4px;border-radius:2px;background:#8FA2FF;height:18px"></span><span style="width:4px;border-radius:2px;background:#8FA2FF;height:26px"></span><span style="width:4px;border-radius:2px;background:#8FA2FF;height:14px"></span><span style="width:4px;border-radius:2px;background:#8FA2FF;height:30px"></span><span style="width:4px;border-radius:2px;background:#8FA2FF;height:22px"></span><span style="width:4px;border-radius:2px;background:#8FA2FF;height:12px"></span><span style="width:4px;border-radius:2px;background:#8FA2FF;height:28px"></span><span style="width:4px;border-radius:2px;background:#8FA2FF;height:20px"></span><span style="width:4px;border-radius:2px;background:#8FA2FF;height:8px"></span><span style="width:4px;border-radius:2px;background:#8FA2FF;height:24px"></span><span style="width:4px;border-radius:2px;background:#8FA2FF;height:30px"></span><span style="width:4px;border-radius:2px;background:#8FA2FF;height:16px"></span><span style="width:4px;border-radius:2px;background:#8FA2FF;height:12px"></span>
-            </div>
-            <div style="font-size:10px;color:#C9D1FF">Out Friday</div>
-          </div>
-        </div>
-      </div>
-    </div>
+  <!-- app screenshot -->
+  <div style="flex:1.5 1 460px;min-width:0">
+    <button type="button" class="shot" data-full="img/looks.webp" aria-label="Enlarge screenshot: the Look tab"><img src="img/looks.webp" alt="Releasy editor on the Look tab, with a grid of looks and a YouTube 16:9 preview" width="1442" height="932" style="display:block;width:100%;height:auto;border-radius:14px;border:1px solid #2A3147;box-shadow:0 30px 80px rgba(0,0,0,.5)"></button>
   </div>
 </div>
 
@@ -111,6 +90,15 @@ details.faq p{margin:0;padding:0 8px 22px;color:#A9B0C3;max-width:46em}
     <span style="font-weight:600;color:#EEF0F6">Exports for</span>
     <span>Instagram Reels</span><span>TikTok</span><span>YouTube</span><span>YouTube Shorts</span><span>Instagram feed</span><span>Spotify Canvas</span>
   </div>
+</div>
+
+<!-- SHOTS -->
+<div id="shots" style="max-width:1200px;margin:0 auto;padding:96px 24px 0;box-sizing:border-box">
+  <div style="max-width:640px;margin-bottom:40px">
+    <div style="font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#8FA2FF;font-weight:600;margin-bottom:12px">See it in action</div>
+    <h2 style="margin:0;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(30px,4vw,44px);line-height:1.1;letter-spacing:-.015em;text-wrap:balance">The real app, not a mock-up.</h2>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:28px"><figure style="flex:1 1 440px;min-width:0;margin:0;display:flex;flex-direction:column;gap:14px"><button type="button" class="shot" data-full="img/editor.webp" aria-label="Enlarge screenshot: Check every format"><img src="img/editor.webp" alt="Releasy editor with a vertical Instagram Reels preview, the player and the snippet waveform" width="1442" height="932" loading="lazy" style="display:block;width:100%;height:auto;border-radius:14px;border:1px solid #2A3147"></button><figcaption><h3 style="margin:0 0 4px;font-family:'Space Grotesk',sans-serif;font-size:21px">Check every format</h3><p style="margin:0;color:#A9B0C3">Switch between Reels, TikTok, YouTube and more while you work, and pick your snippets right on the waveform.</p></figcaption></figure><figure style="flex:1 1 440px;min-width:0;margin:0;display:flex;flex-direction:column;gap:14px"><button type="button" class="shot" data-full="img/lyrics.webp" aria-label="Enlarge screenshot: Time your lyrics"><img src="img/lyrics.webp" alt="Releasy Lyrics view with timed lines on the left and a live preview on the right" width="1442" height="932" loading="lazy" style="display:block;width:100%;height:auto;border-radius:14px;border:1px solid #2A3147"></button><figcaption><h3 style="margin:0 0 4px;font-family:'Space Grotesk',sans-serif;font-size:21px">Time your lyrics</h3><p style="margin:0;color:#A9B0C3">Paste your lyrics, stamp each line while the song plays, and watch them appear in the preview.</p></figcaption></figure></div>
 </div>
 
 <!-- FEATURES -->
@@ -263,6 +251,17 @@ details.faq p{margin:0;padding:0 8px 22px;color:#A9B0C3;max-width:46em}
     history.replaceState(null,'','#'+id);
     if(id!=='top'){el.classList.remove('hl-target');void el.offsetWidth;el.classList.add('hl-target');clearTimeout(t);t=setTimeout(function(){el.classList.remove('hl-target')},1700);}
   });
+})();
+</script>
+<dialog id="lb" aria-label="Screenshot"><img id="lbImg" alt=""></dialog>
+<script>
+(function(){
+  var lb=document.getElementById('lb'),im=document.getElementById('lbImg');
+  document.querySelectorAll('.shot').forEach(function(b){b.addEventListener('click',function(){
+    var i=b.querySelector('img');im.src=b.getAttribute('data-full');im.alt=i?i.alt:'';
+    if(lb.showModal)lb.showModal();else window.open(im.src);
+  });});
+  lb.addEventListener('click',function(){lb.close();});
 })();
 </script>
 </body>
