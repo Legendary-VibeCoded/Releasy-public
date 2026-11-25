@@ -50,6 +50,10 @@ dialog#nosale p{margin:0 0 22px;color:#A9B0C3;line-height:1.6}
 dialog#nosale button{background:#3F5BF0;color:#fff;border:0;border-radius:10px;min-height:44px;padding:0 26px;font:inherit;font-weight:600;cursor:pointer}
 dialog#nosale button:hover{background:#4D69FF}
 dialog#nosale button:focus-visible{outline:2px solid #8FA2FF;outline-offset:3px}
+.beta-link{position:relative;padding:5px 14px;border-radius:9px}
+.beta-link::after{content:"";position:absolute;inset:0;border-radius:9px;padding:1.5px;pointer-events:none;background:linear-gradient(110deg,transparent 35%,#8FA2FF 50%,transparent 65%) 130% 0/250% 100% no-repeat;-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);animation:betashimmer 5s ease-in-out infinite}
+@keyframes betashimmer{0%{background-position:130% 0;opacity:1}30%{background-position:-30% 0;opacity:1}31%,100%{background-position:-30% 0;opacity:0}}
+@media (prefers-reduced-motion:reduce){.beta-link::after{animation:none;opacity:0}}
 </style>
 </head>
 <body>
@@ -69,7 +73,7 @@ dialog#nosale button:focus-visible{outline:2px solid #8FA2FF;outline-offset:3px}
     <a href="#pricing" style="color:#A9B0C3">Pricing</a>
     <a href="#safety" style="color:#A9B0C3">Windows warning?</a>
     <a href="#faq" style="color:#A9B0C3">FAQ</a>
-    <a href="/releasy-beta/" style="color:#8FA2FF">Beta program</a>
+    <a class="beta-link" href="/releasy-beta/" style="color:#8FA2FF">Beta program</a>
   </nav>
 </div>
 
