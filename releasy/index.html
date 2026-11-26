@@ -49,10 +49,8 @@ details.faq p{margin:0;padding:0 8px 22px;color:#A9B0C3;max-width:46em}
 .shot{display:block;width:100%;padding:0;border:0;background:none;cursor:zoom-in;border-radius:14px;transition:transform .25s ease}
 .shot:hover{transform:translateY(-2px)}
 .shot:focus-visible{outline:2px solid #8FA2FF;outline-offset:4px}
-#payShade{position:fixed;inset:0;background:#000;opacity:0;visibility:hidden;pointer-events:none;transition:opacity 1s ease,visibility 0s linear 1s;z-index:2147483000}
-#payShade.on{opacity:.9;visibility:visible;transition:opacity 1s ease,visibility 0s}
 @keyframes pfade{from{opacity:0}to{opacity:1}}
-iframe.paddle-frame{animation:pfade 1s ease both;z-index:2147483647}
+iframe.paddle-frame{animation:pfade 1s ease both}
 dialog#lb{border:0;padding:0;background:transparent;max-width:min(96vw,1442px);max-height:96vh;cursor:zoom-out;overflow:visible}
 dialog#lb::backdrop{background:rgba(5,6,9,.88)}
 dialog#lb img{display:block;max-width:100%;max-height:92vh;margin:0 auto;border-radius:12px;border:1px solid #2A3147}
@@ -314,7 +312,6 @@ dialog#nosale button:focus-visible{outline:2px solid #8FA2FF;outline-offset:3px}
   tick();
 })();
 </script>
-<div id="payShade" aria-hidden="true"></div>
 <dialog id="nosale" aria-labelledby="nosaleT"><h2 id="nosaleT">Not on sale yet</h2><p>Public sales have not started yet. Please check back soon.</p><button type="button" id="nosaleX">Got it</button></dialog>
 <script>
 (function(){
@@ -332,16 +329,13 @@ dialog#nosale button:focus-visible{outline:2px solid #8FA2FF;outline-offset:3px}
     s.onerror=function(){say('Checkout did not load','The checkout could not be loaded. Please check your connection and try again, or email support@legendaryhq.net.');};
     document.head.appendChild(s);
   }
-  var sh=document.getElementById('payShade');
-  function shade(on){sh.classList.toggle('on',on);}
   function checkout(){
     try{
-      if(!window.__paddleInit){Paddle.Initialize({token:TOKEN,eventCallback:function(ev){if(ev&&ev.name==='checkout.closed')shade(false);}});window.__paddleInit=1;}
+      if(!window.__paddleInit){Paddle.Initialize({token:TOKEN});window.__paddleInit=1;}
       var o={items:[{priceId:PRICE,quantity:1}],settings:{displayMode:'overlay',theme:'dark',locale:'en',successUrl:location.origin+'/releasy/thank-you/'}};
       var c=q.get('discount'); if(c) o.discountCode=c;
-      shade(true);
       Paddle.Checkout.open(o);
-    }catch(e){shade(false);say('Checkout did not load','The checkout could not be started. Please try again, or email support@legendaryhq.net.');}
+    }catch(e){say('Checkout did not load','The checkout could not be started. Please try again, or email support@legendaryhq.net.');}
   }
   document.querySelectorAll('.buy').forEach(function(b){b.addEventListener('click',function(){
     if(!live) return say('Not on sale yet','Public sales have not started yet. Please check back soon.');
