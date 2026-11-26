@@ -49,12 +49,16 @@ details.faq p{margin:0;padding:0 8px 22px;color:#A9B0C3;max-width:46em}
 .shot{display:block;width:100%;padding:0;border:0;background:none;cursor:zoom-in;border-radius:14px;transition:transform .25s ease}
 .shot:hover{transform:translateY(-2px)}
 .shot:focus-visible{outline:2px solid #8FA2FF;outline-offset:4px}
-.dc{font-size:14px}
-.dc-t{background:none;border:0;padding:6px 0;color:#8FA2FF;font:inherit;cursor:pointer;text-decoration:underline;text-underline-offset:3px;min-height:32px}
+.dc{font-size:12px;opacity:0;transition:opacity .25s ease;padding:4px 0 2px}
+.buy:hover ~ .dc,div:has(> .buy):hover + .dc,.dc:hover,.dc:focus-within,.dc:has(.dc-f:not([hidden])){opacity:.5}
+.dc:hover,.dc:focus-within,.dc:has(.dc-f:not([hidden])){opacity:.9}
+@media (hover:none){.dc{opacity:.5}}
+@media (prefers-reduced-motion:reduce){.dc{transition:none}}
+.dc-t{background:none;border:0;padding:4px 0;color:#8FA2FF;font:inherit;cursor:pointer;text-decoration:underline;text-underline-offset:3px;min-height:28px}
 .dc-t:hover{color:#B7C3FF}
 .dc-t:focus-visible,.dc-i:focus-visible{outline:2px solid #8FA2FF;outline-offset:3px}
 .dc-f{display:inline-block;margin:2px 0 0 12px}
-.dc-i{width:min(240px,100%);box-sizing:border-box;background:#0C0E14;color:#EEF0F6;border:1px solid #2A3147;border-radius:8px;padding:9px 12px;font:inherit;letter-spacing:.04em;min-height:40px}
+.dc-i{width:min(200px,100%);box-sizing:border-box;background:#0C0E14;color:#EEF0F6;border:1px solid #2A3147;border-radius:8px;padding:6px 10px;font:inherit;letter-spacing:.04em;min-height:32px}
 .dc-i::placeholder{color:#7F879C;letter-spacing:0}
 @keyframes pfade{from{opacity:0}to{opacity:1}}
 iframe.paddle-frame{animation:pfade 1s ease both}
