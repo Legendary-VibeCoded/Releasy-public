@@ -296,8 +296,32 @@ dialog#nosale button:focus-visible{outline:2px solid #8FA2FF;outline-offset:3px}
 <dialog id="nosale" aria-labelledby="nosaleT"><h2 id="nosaleT">Not on sale yet</h2><p>Public sales have not started yet. Please check back soon.</p><button type="button" id="nosaleX">Got it</button></dialog>
 <script>
 (function(){
-  var d=document.getElementById('nosale');
-  document.querySelectorAll('.buy').forEach(function(b){b.addEventListener('click',function(){if(d.showModal)d.showModal();else alert('Public sales have not started yet.');});});
+  // SALES SWITCH: false = the Purchase buttons show "not on sale yet". Set to true to start selling.
+  // For testing, open this page with ?open=1 (and optionally &discount=CODE) to try the real checkout.
+  var SALES_OPEN=false;
+  var TOKEN='live_d08593782aa3dc256520d61c8fd', PRICE='pri_01m8cfd5zgv519ejwre1qnf335';
+  var q=new URLSearchParams(location.search), live=SALES_OPEN||q.get('open')==='1';
+  var d=document.getElementById('nosale'), t=document.getElementById('nosaleT'), m=d.querySelector('p');
+  function say(title,text){t.textContent=title;m.textContent=text;if(d.showModal)d.showModal();else alert(text);}
+  function paddle(cb){
+    if(window.Paddle) return cb();
+    var s=document.createElement('script');s.src='https://cdn.paddle.com/paddle/v2/paddle.js';
+    s.onload=cb;
+    s.onerror=function(){say('Checkout did not load','The checkout could not be loaded. Please check your connection and try again, or email support@legendaryhq.net.');};
+    document.head.appendChild(s);
+  }
+  function checkout(){
+    try{
+      if(!window.__paddleInit){Paddle.Initialize({token:TOKEN});window.__paddleInit=1;}
+      var o={items:[{priceId:PRICE,quantity:1}],settings:{displayMode:'overlay',theme:'dark',locale:'en',successUrl:location.origin+'/releasy/thank-you/'}};
+      var c=q.get('discount'); if(c) o.discountCode=c;
+      Paddle.Checkout.open(o);
+    }catch(e){say('Checkout did not load','The checkout could not be started. Please try again, or email support@legendaryhq.net.');}
+  }
+  document.querySelectorAll('.buy').forEach(function(b){b.addEventListener('click',function(){
+    if(!live) return say('Not on sale yet','Public sales have not started yet. Please check back soon.');
+    paddle(checkout);
+  });});
   document.getElementById('nosaleX').addEventListener('click',function(){d.close();});
   d.addEventListener('click',function(e){if(e.target===d)d.close();});
 })();
