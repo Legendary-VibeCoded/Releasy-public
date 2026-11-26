@@ -53,10 +53,6 @@ dialog#nosale p{margin:0 0 22px;color:#A9B0C3;line-height:1.6}
 dialog#nosale button{background:#3F5BF0;color:#fff;border:0;border-radius:10px;min-height:44px;padding:0 26px;font:inherit;font-weight:600;cursor:pointer}
 dialog#nosale button:hover{background:#4D69FF}
 dialog#nosale button:focus-visible{outline:2px solid #8FA2FF;outline-offset:3px}
-.beta-link{position:relative;padding:5px 14px;border-radius:9px}
-.beta-link::after{content:"";position:absolute;inset:0;border-radius:9px;padding:1.5px;pointer-events:none;background:linear-gradient(110deg,transparent 35%,#8FA2FF 50%,transparent 65%) 130% 0/250% 100% no-repeat;-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);animation:betashimmer 5s ease-in-out infinite}
-@keyframes betashimmer{0%{background-position:130% 0;opacity:1}30%{background-position:-30% 0;opacity:1}31%,100%{background-position:-30% 0;opacity:0}}
-@media (prefers-reduced-motion:reduce){.beta-link::after{animation:none;opacity:0}}
 </style>
 </head>
 <body>
@@ -76,7 +72,6 @@ dialog#nosale button:focus-visible{outline:2px solid #8FA2FF;outline-offset:3px}
     <a href="#pricing" style="color:#A9B0C3">Pricing</a>
     <a href="#safety" style="color:#A9B0C3">Windows warning?</a>
     <a href="#faq" style="color:#A9B0C3">FAQ</a>
-    <a class="beta-link" href="/releasy-beta/" style="color:#8FA2FF">Beta program</a>
   </nav>
 </div>
 
@@ -230,8 +225,8 @@ dialog#nosale button:focus-visible{outline:2px solid #8FA2FF;outline-offset:3px}
     <p style="margin:0;color:#A9B0C3">No accounts, no cloud rendering, no tracking. Your unreleased music never leaves your machine.</p>
   </div>
   <div style="flex:1 1 340px;min-width:0;background:#151926;border:1px solid #2A3147;border-radius:14px;padding:26px;display:flex;flex-direction:column;gap:10px">
-    <h3 style="margin:0;font-family:'Space Grotesk',sans-serif;font-size:21px">Beta, and honest about it</h3>
-    <p style="margin:0;color:#A9B0C3">Releasy works, but it is still a beta. Found a bug? Copy the version info from Settings, then click the button below.</p>
+    <h3 style="margin:0;font-family:'Space Grotesk',sans-serif;font-size:21px">Found a bug or have an idea?</h3>
+    <p style="margin:0;color:#A9B0C3">Tell me what is not working or what you would like to see. Copy the version info from Settings, then click the button below.</p>
     <a class="btn-main" href="https://docs.google.com/forms/d/e/1FAIpQLSdpIYpbQYOx8YH9myFoswBg6jdVOEEJ9Xql0g29b8aD2SUXcg/viewform?usp=publish-editor" style="margin-top:6px;background:#3F5BF0;color:#FFFFFF;padding:12px 22px;border-radius:10px;font-weight:600;min-height:44px;box-sizing:border-box;display:inline-flex;align-items:center;align-self:flex-start">Open the feedback form</a>
   </div>
 </div>
@@ -247,7 +242,6 @@ dialog#nosale button:focus-visible{outline:2px solid #8FA2FF;outline-offset:3px}
   <div style="max-width:1200px;margin:0 auto;padding:32px 24px;box-sizing:border-box;display:flex;flex-wrap:wrap;gap:16px 40px;justify-content:space-between;color:#A9B0C3;font-size:14px">
     <div style="flex:1 1 360px;min-width:0">&copy; Legendary Soft. All rights reserved.<br>Releasy is not affiliated with or endorsed by Instagram, TikTok, YouTube or Spotify. Their names only describe the video formats.</div>
     <div style="display:flex;flex-wrap:wrap;gap:8px 24px;align-items:flex-start">
-      <a href="/releasy-beta/" style="color:#A9B0C3">Beta program</a>
       <a href="/releasy/privacy/" style="color:#A9B0C3">Privacy</a>
       <a href="/releasy/terms/" style="color:#A9B0C3">Terms</a>
       <a href="/releasy/refunds/" style="color:#A9B0C3">Refunds</a>
@@ -282,7 +276,7 @@ dialog#nosale button:focus-visible{outline:2px solid #8FA2FF;outline-offset:3px}
   lb.addEventListener('click',function(){lb.close();});
 })();
 </script>
-<dialog id="nosale" aria-labelledby="nosaleT"><h2 id="nosaleT">Not on sale yet</h2><p>Public sales have not started yet. Releasy is still in beta, so please check back soon.</p><button type="button" id="nosaleX">Got it</button></dialog>
+<dialog id="nosale" aria-labelledby="nosaleT"><h2 id="nosaleT">Not on sale yet</h2><p>Public sales have not started yet. Please check back soon.</p><button type="button" id="nosaleX">Got it</button></dialog>
 <script>
 (function(){
   var d=document.getElementById('nosale');
