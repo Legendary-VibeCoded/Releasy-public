@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<title>Releasy sandbox checkout test</title>
+<style>
+  body { font-family: "Segoe UI", Arial, sans-serif; background: #111418; color: #e8e8e8; max-width: 640px; margin: 48px auto; padding: 0 20px; line-height: 1.5; }
+  h1 { font-size: 22px; margin-bottom: 4px; }
+  .tag { display: inline-block; background: #f5c542; color: #111; font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 4px; }
+  button { font: inherit; font-weight: 600; background: #8b7cff; color: #fff; border: 0; border-radius: 8px; padding: 12px 22px; cursor: pointer; margin-top: 16px; }
+  button:disabled { opacity: .5; cursor: default; }
+  code { background: #23272e; padding: 1px 6px; border-radius: 4px; }
+  #log { background: #1b1f25; border-radius: 8px; padding: 12px 14px; font-family: Consolas, monospace; font-size: 13px; white-space: pre-wrap; margin-top: 20px; min-height: 60px; }
+  .card { background: #1b1f25; border-radius: 8px; padding: 12px 16px; margin-top: 16px; font-size: 14px; }
+</style>
+</head>
+<body>
+  <span class="tag">PADDLE SANDBOX, NO REAL MONEY</span>
+  <h1>Releasy checkout test</h1>
+  <p>Opens a sandbox checkout for Releasy. After paying, the key email should arrive within a minute.</p>
+
+  <div class="card">
+    <b>Test card</b><br>
+    Number <code>4242 4242 4242 4242</code> · Expiry any future date · CVC <code>100</code> · Name anything<br>
+    Use your own email address so the key email reaches you.
+  </div>
+
+  <button id="buy" disabled>Loading Paddle…</button>
+  <div id="log"></div>
+
+<script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
+<script>
+  const CLIENT_TOKEN = "test_4d87bea2b127e9f0a1084eff7f0"; // public client-side token (sandbox)
+  const PRICE_ID = "pri_01m8c8a5gytbj7bvjrwbqhra9m";        // Releasy sandbox price
+
+  const logEl = document.getElementById("log");
+  const btn = document.getElementById("buy");
+  const log = (msg) => { logEl.textContent += new Date().toLocaleTimeString() + "  " + msg + "\n"; };
+
+  try {
+    Paddle.Environment.set("sandbox");
+    Paddle.Initialize({
+      token: CLIENT_TOKEN,
+      eventCallback: (e) => {
+        if (!e || !e.name) return;
+        if (e.name === "checkout.completed") {
+          log("Payment completed. Transaction: " + (e.data && e.data.transaction_id));
+          log("Now check your inbox for \"Your Releasy license key\".");
+        } else if (e.name === "checkout.error" || e.name === "checkout.failed") {
+          log("Checkout problem: " + JSON.stringify(e.data || e.error || e));
+        } else if (["checkout.loaded", "checkout.closed", "checkout.payment.selected"].includes(e.name)) {
+          log(e.name);
+        }
+      },
+    });
+    btn.disabled = false;
+    btn.textContent = "Buy Releasy (sandbox)";
+    log("Paddle ready.");
+  } catch (err) {
+    log("Paddle failed to load: " + err);
+  }
+
+  btn.addEventListener("click", () => {
+    log("Opening checkout…");
+    Paddle.Checkout.open({
+      items: [{ priceId: PRICE_ID, quantity: 1 }],
+      settings: { displayMode: "overlay", theme: "dark", locale: "en" },
+    });
+  });
+</script>
+</body>
+</html>
