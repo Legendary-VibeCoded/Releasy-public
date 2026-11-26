@@ -22,6 +22,10 @@ a:focus-visible,button:focus-visible{outline:2px solid #8FA2FF;outline-offset:3p
 .btn-ghost:hover{border-color:#8FA2FF}
 .faq-q:hover{background:#1C2233}
 html{scroll-behavior:smooth}
+.beta-link{position:relative;padding:5px 14px;border-radius:9px}
+.beta-link::after{content:"";position:absolute;inset:0;border-radius:9px;padding:1.5px;pointer-events:none;background:linear-gradient(110deg,transparent 35%,#8FA2FF 50%,transparent 65%) 130% 0/250% 100% no-repeat;-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);animation:betashimmer 5s ease-in-out infinite}
+@keyframes betashimmer{0%{background-position:130% 0;opacity:1}30%{background-position:-30% 0;opacity:1}31%,100%{background-position:-30% 0;opacity:0}}
+@media (prefers-reduced-motion:reduce){.beta-link::after{animation:none;opacity:0}}
 a,button,.btn-main,.btn-ghost{transition:background-color .2s ease,border-color .2s ease,color .2s ease,transform .2s ease}
 .btn-main:hover,.btn-ghost:hover{transform:translateY(-1px)}
 .hl-target{position:relative}
@@ -72,6 +76,7 @@ dialog#nosale button:focus-visible{outline:2px solid #8FA2FF;outline-offset:3px}
     <a href="#pricing" style="color:#A9B0C3">Pricing</a>
     <a href="#safety" style="color:#A9B0C3">Windows warning?</a>
     <a href="#faq" style="color:#A9B0C3">FAQ</a>
+    <a class="beta-link" href="/releasy-beta/" style="color:#8FA2FF">Beta program</a>
   </nav>
 </div>
 
@@ -242,6 +247,7 @@ dialog#nosale button:focus-visible{outline:2px solid #8FA2FF;outline-offset:3px}
   <div style="max-width:1200px;margin:0 auto;padding:32px 24px;box-sizing:border-box;display:flex;flex-wrap:wrap;gap:16px 40px;justify-content:space-between;color:#A9B0C3;font-size:14px">
     <div style="flex:1 1 360px;min-width:0">&copy; Legendary Soft. All rights reserved.<br>Releasy is not affiliated with or endorsed by Instagram, TikTok, YouTube or Spotify. Their names only describe the video formats.</div>
     <div style="display:flex;flex-wrap:wrap;gap:8px 24px;align-items:flex-start">
+      <a href="/releasy-beta/" style="color:#A9B0C3">Beta program</a>
       <a href="/releasy/privacy/" style="color:#A9B0C3">Privacy</a>
       <a href="/releasy/terms/" style="color:#A9B0C3">Terms</a>
       <a href="/releasy/refunds/" style="color:#A9B0C3">Refunds</a>
