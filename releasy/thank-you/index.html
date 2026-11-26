@@ -25,10 +25,10 @@ b,strong{color:#EEF0F6;font-weight:600}
 .lead{font-size:18px;color:#A9B0C3}.meta{font-size:14px;color:#7F879C;margin:0 0 28px}
 .card{background:#151926;border:1px solid #2A3147;border-radius:14px;padding:22px 24px;margin:0 0 18px}
 .card p:last-child{margin:0}
-p[id]{scroll-margin-top:24px}
-@keyframes tgt{0%,35%{background:rgba(143,162,255,.20);box-shadow:0 0 0 10px rgba(143,162,255,.20)}100%{background:rgba(143,162,255,0);box-shadow:0 0 0 10px rgba(143,162,255,0)}}
+p[id]{scroll-margin-top:max(24px,calc(50vh - 100px))}
+@keyframes tgt{0%,35%{background:rgba(143,162,255,.42);box-shadow:0 0 0 10px rgba(143,162,255,.42)}100%{background:rgba(143,162,255,0);box-shadow:0 0 0 10px rgba(143,162,255,0)}}
 p[id]:target{border-radius:6px;animation:tgt 3s ease-out}
-@media (prefers-reduced-motion:reduce){p[id]:target{animation:none;background:rgba(143,162,255,.14);box-shadow:0 0 0 10px rgba(143,162,255,.14)}}
+@media (prefers-reduced-motion:reduce){p[id]:target{animation:none;background:rgba(143,162,255,.34);box-shadow:0 0 0 10px rgba(143,162,255,.34)}}
 .brand-ver{font-family:'Space Grotesk',sans-serif;font-weight:400;font-size:.7em;letter-spacing:0;color:#98A0AF;opacity:.55;align-self:center;margin-left:-6px;position:relative;top:2px}
 .dl{display:inline-flex;align-items:center;gap:10px;min-height:52px;padding:0 30px;border-radius:12px;background:#3F5BF0;color:#fff;font-weight:600;font-size:18px;transition:background-color .2s}.dl:hover{background:#4D69FF}
 .dl svg{width:20px;height:20px}
