@@ -296,9 +296,9 @@ dialog#nosale button:focus-visible{outline:2px solid #8FA2FF;outline-offset:3px}
 <dialog id="nosale" aria-labelledby="nosaleT"><h2 id="nosaleT">Not on sale yet</h2><p>Public sales have not started yet. Please check back soon.</p><button type="button" id="nosaleX">Got it</button></dialog>
 <script>
 (function(){
-  // SALES SWITCH: false = the Purchase buttons show "not on sale yet". Set to true to start selling.
+  // SALES SWITCH: true = the Purchase buttons open the checkout. Set to false to show "not on sale yet" again.
   // For testing, open this page with ?open=1 (and optionally &discount=CODE) to try the real checkout.
-  var SALES_OPEN=false;
+  var SALES_OPEN=true;
   var TOKEN='live_d08593782aa3dc256520d61c8fd', PRICE='pri_01m8cfd5zgv519ejwre1qnf335';
   var q=new URLSearchParams(location.search), live=SALES_OPEN||q.get('open')==='1';
   var d=document.getElementById('nosale'), t=document.getElementById('nosaleT'), m=d.querySelector('p');
