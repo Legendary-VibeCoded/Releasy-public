@@ -61,6 +61,12 @@ details.faq p{margin:0;padding:0 8px 22px;color:#A9B0C3;max-width:46em}
 .dc-i{width:min(200px,100%);box-sizing:border-box;background:#0C0E14;color:#EEF0F6;border:1px solid #2A3147;border-radius:8px;padding:6px 10px;font:inherit;letter-spacing:.04em;min-height:32px}
 .dc-i::placeholder{color:#7F879C;letter-spacing:0}
 .brand-ver{font-family:'Space Grotesk',sans-serif;font-weight:400;font-size:.7em;letter-spacing:0;color:#98A0AF;opacity:.55;align-self:center;margin-left:-6px;position:relative;top:2px}
+.wl-l{font-size:14px;color:#EEF0F6;font-weight:600}
+.wl-i{width:100%;box-sizing:border-box;background:#0C0E14;color:#EEF0F6;border:1px solid #2A3147;border-radius:10px;padding:11px 14px;font:inherit;min-height:46px}
+.wl-i:focus-visible,.wl-c input:focus-visible{outline:2px solid #8FA2FF;outline-offset:2px}
+.wl-c{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:#A9B0C3;line-height:1.5}
+.wl-c input{margin-top:3px;flex:0 0 auto;width:18px;height:18px;accent-color:#3F5BF0}
+#wlMsg.err{color:#FF8A8A}#wlMsg.ok{color:#4CC38A}
 @keyframes pfade{from{opacity:0}to{opacity:1}}
 iframe.paddle-frame{animation:pfade 1s ease both}
 dialog#lb{border:0;padding:0;background:transparent;max-width:min(96vw,1442px);max-height:96vh;cursor:zoom-out;overflow:visible}
@@ -234,6 +240,27 @@ dialog#nosale button:focus-visible{outline:2px solid #8FA2FF;outline-offset:3px}
   </div>
 </div>
 
+<!-- RELEASY ONLINE WAITING LIST -->
+<div id="online" hidden style="max-width:860px;margin:0 auto;padding:96px 24px 0;box-sizing:border-box">
+  <div style="background:#151926;border:1px solid #2A3147;border-radius:18px;padding:32px;display:flex;flex-direction:column;gap:14px">
+    <div style="font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#8FA2FF;font-weight:600">Maybe later</div>
+    <h2 style="margin:0;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(26px,3.4vw,36px);line-height:1.15;letter-spacing:-.015em;text-wrap:balance">Releasy Online: in your browser, with a monthly plan.</h2>
+    <p style="margin:0;color:#A9B0C3;max-width:40em">The Windows app is a one-time purchase and stays that way, with no account. If enough people ask for it, I will also offer the same app in your browser for a low monthly price, for example if you use a Mac. Leave your email and I will send you one message when it is ready.</p>
+    <form id="wlForm" novalidate style="display:flex;flex-direction:column;gap:12px;max-width:520px">
+      <label class="wl-l" for="wlEmail">Email address</label>
+      <input class="wl-i" id="wlEmail" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com" maxlength="200" required>
+      <label class="wl-l" for="wlPlat">Which computer do you use?</label>
+      <select class="wl-i" id="wlPlat"><option value="windows">Windows</option><option value="mac">Mac</option><option value="other">Something else</option></select>
+      <input type="text" id="wlWebsite" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+      <label class="wl-c"><input type="checkbox" id="wlConsent"><span>I agree that Legendary Tunes uses my email address to confirm this signup and to send me one email when Releasy Online is available. I can unsubscribe at any time. See the <a href="/releasy/privacy/" style="color:#8FA2FF">privacy policy</a>.</span></label>
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px">
+        <button type="submit" id="wlGo" class="btn-main" style="background:#3F5BF0;color:#fff;border:0;border-radius:10px;min-height:44px;padding:0 24px;font:inherit;font-weight:600;cursor:pointer">Tell me when it is ready</button>
+        <span id="wlMsg" role="status" aria-live="polite" style="font-size:14px;color:#A9B0C3"></span>
+      </div>
+    </form>
+  </div>
+</div>
+
 <!-- FAQ -->
 <div id="faq" style="max-width:860px;margin:0 auto;padding:96px 24px 40px;box-sizing:border-box">
   <div style="margin-bottom:32px;text-align:left">
@@ -326,6 +353,33 @@ dialog#nosale button:focus-visible{outline:2px solid #8FA2FF;outline-offset:3px}
     setTimeout(tick,1000);
   }
   tick();
+})();
+</script>
+<script>
+(function(){
+  // Releasy Online waiting list: posts to the license server, which sends a confirmation email (double opt-in).
+  var URL_WL='https://releasy-license-live.legendarysoftware.workers.dev/waitlist';
+  var f=document.getElementById('wlForm'); if(!f) return;
+  var email=document.getElementById('wlEmail'), plat=document.getElementById('wlPlat'), con=document.getElementById('wlConsent'),
+      hp=document.getElementById('wlWebsite'), go=document.getElementById('wlGo'), msg=document.getElementById('wlMsg');
+  function say(t,c){msg.textContent=t;msg.className=c||'';}
+  f.addEventListener('submit',function(e){
+    e.preventDefault();
+    var v=email.value.trim();
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){say('Please enter a valid email address.','err');email.focus();return;}
+    if(!con.checked){say('Please tick the box to agree.','err');con.focus();return;}
+    go.disabled=true; say('Sending...');
+    fetch(URL_WL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:v,platform:plat.value,consent:true,website:hp.value})})
+      .then(function(r){return r.json();})
+      .then(function(d){
+        go.disabled=false;
+        if(d&&d.ok){say('Almost done: check your email and click the confirmation link. Look in spam if it does not arrive.','ok');f.reset();}
+        else if(d&&d.reason==='rate_limited'){say('Too many attempts. Please try again in a minute.','err');}
+        else if(d&&d.reason==='email'){say('That email address does not look right.','err');}
+        else{say('Something went wrong. Please try again, or email support@legendaryhq.net.','err');}
+      })
+      .catch(function(){go.disabled=false;say('Could not reach the server. Check your connection and try again.','err');});
+  });
 })();
 </script>
 <dialog id="nosale" aria-labelledby="nosaleT"><h2 id="nosaleT">Not on sale yet</h2><p>Public sales have not started yet. Please check back soon.</p><button type="button" id="nosaleX">Got it</button></dialog>
