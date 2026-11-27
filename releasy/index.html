@@ -296,7 +296,7 @@ function ease(p){return p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2}
 function view(v){var s=v.s,tx=W/2-v.x*k*s,ty=H/2-v.y*k*s;tx=clamp(tx,W-W*s,0);ty=clamp(ty,H-H*s,0);return{tx:tx,ty:ty,s:s}}
 function lerpV(a,b,p){var A=view(a),B=view(b);return{tx:A.tx+(B.tx-A.tx)*p,ty:A.ty+(B.ty-A.ty)*p,s:A.s+(B.s-A.s)*p}}
 var hover=false,sticky=false,passed=false,animUntil=0;
-function bandFor(){var open=W<700||((hover||sticky)&&!passed);return open?Math.round(H):Math.round(W*0.355)}
+function bandFor(){var open=W<700||(hover&&!passed);return open?Math.round(H):Math.round(W*0.355)}
 function applyBand(){var h=bandFor()+2;stage.classList.toggle('small',bandFor()<H-1);if(stage.style.height!==h+'px'){stage.style.height=h+'px';animUntil=performance.now()+700;if(!playing)settle()}}
 function settle(){draw();if(performance.now()<animUntil)requestAnimationFrame(settle)}
 function size(){W=stage.clientWidth;H=W*IH/IW;k=W/IW;layers.style.height=hls.style.height=H+'px';Object.keys(els).forEach(function(n){els[n].style.width=W+'px';els[n].style.height=H+'px'});applyBand();draw()}
@@ -321,12 +321,13 @@ function frame(ts){if(!playing)return;if(!last)last=ts;t+=Math.min(60,ts-last);l
 function update(){var want=!userPaused&&visible&&!reduce&&!document.hidden;if(want&&!playing){playing=true;last=0;requestAnimationFrame(frame)}else if(!want){playing=false}stage.classList.toggle('paused',userPaused||reduce);ppi.innerHTML=(userPaused||reduce)?'<path d="M4 2l10 6-10 6z"/>':'<rect x="3" y="2" width="3.5" height="12"/><rect x="9.5" y="2" width="3.5" height="12"/>';pp.setAttribute('aria-label',(userPaused||reduce)?'Play animation':'Pause animation')}
 function seek(ms){t=ms+(reduce?DUR-200:600);if(reduce){userPaused=true}draw();update()}
 var root=document.getElementById('tourAnim');
-root.addEventListener('mouseenter',function(){hover=true;applyBand()});
-root.addEventListener('mouseleave',function(){hover=false;applyBand()});
-function onScroll(){var top=root.getBoundingClientRect().top,vh=window.innerHeight||document.documentElement.clientHeight;
- var ps=top<=-40,st=!ps&&top<vh*0.55;
- if(ps!==passed||st!==sticky){passed=ps;sticky=st;applyBand()}}
-window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+var px=-1,py=-1;
+function inside(){var r=root.getBoundingClientRect();return px>=r.left&&px<=r.right&&py>=r.top&&py<=r.bottom}
+function recheck(){var top=root.getBoundingClientRect().top,ps=top<=-40,h=!ps&&inside();if(ps!==passed||h!==hover){passed=ps;hover=h;applyBand()}}
+// starts small; grows while the pointer is over it (also when the page scrolls under a resting pointer), shrinks when it leaves or is scrolled past
+document.addEventListener('mousemove',function(e){px=e.clientX;py=e.clientY;recheck()},{passive:true});
+root.addEventListener('mouseleave',recheck);document.documentElement.addEventListener('mouseleave',function(){px=-1;py=-1;recheck()});
+window.addEventListener('scroll',recheck,{passive:true});
 stage.addEventListener('click',function(){if(reduce){reduce=false;userPaused=false}else userPaused=!userPaused;update()});
 document.addEventListener('visibilitychange',update);
 var loaded=false;function load(){if(loaded)return;loaded=true;Object.keys(els).forEach(function(n){var im=els[n].firstChild;im.src=im.dataset.src})}
