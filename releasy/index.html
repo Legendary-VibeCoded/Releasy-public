@@ -299,7 +299,7 @@ var hover=false,sticky=false,passed=false,animUntil=0,lastY=0,lastInit=false;
 var topNow=1e9;
 // Banner height: small by default; hovering opens it fully. While scrolling it grows with the room left under the top of the window
 // (so the text above stays on screen), reaching full size once that room is big enough. It depends on position only, never on its own size.
-function bandFor(){if(W<700||hover)return Math.round(H);var vh=window.innerHeight||document.documentElement.clientHeight,avail=vh-topNow-60;return Math.round(Math.max(W*0.355,Math.min(H,avail)))}
+function bandFor(){if(W<700||hover)return Math.round(H);var vh=window.innerHeight||document.documentElement.clientHeight,avail=vh-topNow-112;return Math.round(Math.max(W*0.355,Math.min(H,avail)))}
 function applyBand(){var h=bandFor()+2;stage.classList.toggle('small',bandFor()<H*0.75);if(stage.style.height!==h+'px'){stage.style.height=h+'px';animUntil=performance.now()+400;if(!playing)settle()}}
 function settle(){draw();if(performance.now()<animUntil)requestAnimationFrame(settle)}
 function size(){W=stage.clientWidth;H=W*IH/IW;k=W/IW;layers.style.height=hls.style.height=H+'px';Object.keys(els).forEach(function(n){els[n].style.width=W+'px';els[n].style.height=H+'px'});applyBand();draw()}
