@@ -39,7 +39,12 @@ details.faq[open] summary::after{content:"\2212"}
 details.faq summary:hover{background:#1C2233}
 details.faq summary:focus-visible{outline:2px solid #8FA2FF;outline-offset:3px}
 details.faq p{margin:0;padding:0 8px 22px;color:#A9B0C3;max-width:46em}
+.lg{position:relative;display:inline-block;width:34px;height:34px;border-radius:50%;overflow:hidden;line-height:0;flex:none}
+.lg::after{content:"";position:absolute;top:-30%;bottom:-30%;left:0;width:38%;background:linear-gradient(100deg,rgba(255,255,255,0),rgba(255,255,255,.95) 50%,rgba(255,255,255,0));transform:translateX(-180%) skewX(-22deg);animation:lgs 7s linear .8s infinite;pointer-events:none}
+@keyframes lgs{0%{transform:translateX(-180%) skewX(-22deg)}11%,100%{transform:translateX(380%) skewX(-22deg)}}
+@media (prefers-reduced-motion:reduce){.lg::after{animation:none;opacity:0}}
 </style>
+<script src="/releasy/icons/glare.js" defer></script>
 </head>
 <body>
 
@@ -50,7 +55,7 @@ details.faq p{margin:0;padding:0 8px 22px;color:#A9B0C3;max-width:46em}
 
 <div style="max-width:1200px;margin:0 auto;padding:22px 24px;box-sizing:border-box;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px">
   <a href="#top" style="display:flex;align-items:center;gap:12px;color:#EEF0F6;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:22px">
-    <img src="/releasy/icons/logo-96.png" width="34" height="34" alt="Releasy logo" style="display:block">
+    <span class="lg"><img src="/releasy/icons/logo-96.png" width="34" height="34" alt="Releasy logo" style="display:block"></span>
     Releasy <span style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#8FA2FF;border:1px solid #2A3147;border-radius:6px;padding:2px 8px;font-family:'Inter',sans-serif">Beta</span>
   </a>
   <nav class="nav" style="display:flex;flex-wrap:wrap;gap:6px 28px;font-size:15px">

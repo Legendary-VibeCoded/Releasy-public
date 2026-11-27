@@ -64,6 +64,10 @@ a.l{color:#8FA2FF}a.l:hover{text-decoration:underline}
 .lp:hover .pane,.lp:focus-within .pane,.lp.open .pane{display:block}
 .lp .pane b{color:#EEF0F6}.lp .pane div+div{margin-top:6px}
 .foot a{color:#A9B0C3}.foot a:hover{color:#FFFFFF}.foot .links{display:flex;flex-wrap:wrap;gap:6px 18px}
+.lg{position:relative;display:inline-block;width:34px;height:34px;border-radius:50%;overflow:hidden;line-height:0;flex:none}
+.lg::after{content:"";position:absolute;top:-30%;bottom:-30%;left:0;width:38%;background:linear-gradient(100deg,rgba(255,255,255,0),rgba(255,255,255,.95) 50%,rgba(255,255,255,0));transform:translateX(-180%) skewX(-22deg);animation:lgs 7s linear .8s infinite;pointer-events:none}
+@keyframes lgs{0%{transform:translateX(-180%) skewX(-22deg)}11%,100%{transform:translateX(380%) skewX(-22deg)}}
+@media (prefers-reduced-motion:reduce){.lg::after{animation:none;opacity:0}}
 html{scroll-behavior:smooth}@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 #toTop{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:max(16px,env(safe-area-inset-bottom,0px));width:44px;height:44px;border-radius:50%;border:1px solid #2A3147;background:rgba(21,25,38,.88);color:#A9B0C3;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .25s,transform .25s,visibility .25s,background-color .2s,color .2s;z-index:50}
 #toTop.show{opacity:.85;visibility:visible;transform:none}
@@ -71,10 +75,11 @@ html{scroll-behavior:smooth}@media (prefers-reduced-motion:reduce){html{scroll-b
 #toTop:focus-visible{outline:2px solid #8FA2FF;outline-offset:3px}
 #toTop svg{width:18px;height:18px}
 @media (prefers-reduced-motion:reduce){#toTop{transition:none}}</style>
+<script src="/releasy/icons/glare.js" defer></script>
 </head>
 <body>
 <div class="page">
-<div class="top"><a class="brand" href="/releasy/"><img src="/releasy/icons/logo-96.png" width="34" height="34" alt="Releasy logo" style="display:block">Releasy<span class="brand-ver">v1.1.4</span></a><nav class="nav"><a href="/releasy/download/">Download</a><a href="/releasy/documentation/" class=on>Documentation</a><a href="/releasy/privacy/">Privacy</a><a href="/releasy/terms/">Terms</a><a href="/releasy/refunds/">Refunds</a><a href="/releasy/contact/">Contact</a><a class="back" href="/releasy/">Back to website</a></nav></div>
+<div class="top"><a class="brand" href="/releasy/"><span class="lg"><img src="/releasy/icons/logo-96.png" width="34" height="34" alt="Releasy logo" style="display:block"></span>Releasy<span class="brand-ver">v1.1.4</span></a><nav class="nav"><a href="/releasy/download/">Download</a><a href="/releasy/documentation/" class=on>Documentation</a><a href="/releasy/privacy/">Privacy</a><a href="/releasy/terms/">Terms</a><a href="/releasy/refunds/">Refunds</a><a href="/releasy/contact/">Contact</a><a class="back" href="/releasy/">Back to website</a></nav></div>
 <main class="wrap wide">
 <h1>Documentation</h1>
 <div class="doc"><aside class="toc"><b>On this page</b><nav aria-label="Documentation sections"><a href="#the-big-picture">The big picture</a><a href="#a-quick-workflow">A quick workflow</a><a href="#release-tab">Release tab</a><a href="#look-tab">Look tab</a><a href="#text-tab">Text tab</a><a href="#stickers-tab">Stickers tab</a><a href="#the-preview-player-and-snippets">The preview, player and snippets</a><a href="#lyrics-view">Lyrics view</a><a href="#release-planner">Release Planner</a><a href="#export-package">Export package</a><a href="#presets">Presets</a><a href="#settings">Settings</a><a href="#colour-themes">Colour themes</a><a href="#saving-your-work">Saving your work</a><a href="#keyboard-shortcuts">Keyboard shortcuts</a><a href="#privacy-and-offline-use">Privacy and offline use</a><a href="#troubleshooting">Troubleshooting</a><a href="#good-to-know">Good to know</a></nav></aside><div class="docbody"><p class="lead">Releasy turns a track into a complete social media package for a release: teaser videos in every format, captions, hashtags and a release schedule. You make the look once and export everything in one go.</p>
