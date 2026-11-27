@@ -350,7 +350,13 @@ button[disabled]{opacity:.35;pointer-events:none}
     });
   }
   function stopAll(){ alive=false; cancelAnimationFrame(raf); timers.forEach(clearTimeout); timers=[] }
+  function fit(){
+    W=(innerWidth<420?52:68);
+    // phones: size the text so the whole frame fits the screen width; wider screens keep the CSS size
+    term.style.fontSize = innerWidth<900 ? Math.max(7,Math.min(15,(innerWidth-32)/(W*0.62))).toFixed(1)+'px' : '';
+  }
   function start(){
+    fit();
     alive=true; staticLvl=0; noise(0); lockTimer=0; rainRGB='51,255,102';
     ['alert','fin'].forEach(function(i){document.getElementById(i).style.display='none'});
     document.getElementById('stage').style.display='flex';
@@ -358,7 +364,7 @@ button[disabled]{opacity:.35;pointer-events:none}
     if(!reduce){ last=0; raf=requestAnimationFrame(frame) }
     else { cx.clearRect(0,0,innerWidth,innerHeight) }
   }
-  addEventListener('resize',function(){ if(alive) size() });
+  addEventListener('resize',function(){ if(alive){ size(); fit(); render(); } });
   start();
 })();
 </script>

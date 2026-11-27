@@ -22,8 +22,6 @@ a{text-decoration:none}
 a:focus-visible,button:focus-visible{outline:2px solid #8FA2FF;outline-offset:3px}
 .nav a:hover{color:#FFFFFF}
 .btn-main:hover{background:#4D69FF}
-.btn-ghost:hover{border-color:#8FA2FF}
-.faq-q:hover{background:#1C2233}
 html{scroll-behavior:smooth}
 a,button,.btn-main,.btn-ghost{transition:background-color .2s ease,border-color .2s ease,color .2s ease,transform .2s ease}
 .btn-main:hover,.btn-ghost:hover{transform:translateY(-1px)}
@@ -31,14 +29,6 @@ a,button,.btn-main,.btn-ghost{transition:background-color .2s ease,border-color 
 .hl-target::after{content:"";position:absolute;inset:40px 8px 8px;border-radius:20px;pointer-events:none;border:2px solid #8FA2FF;box-shadow:0 0 0 1px rgba(143,162,255,.35),0 0 36px rgba(143,162,255,.45),inset 0 0 36px rgba(143,162,255,.18);animation:hlglow 1.6s ease-out forwards}
 @keyframes hlglow{0%{opacity:0;clip-path:inset(0 100% 100% 0)}25%{opacity:1;clip-path:inset(0 0 0 0)}70%{opacity:1}100%{opacity:0;clip-path:inset(0 0 0 0)}}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.hl-target::after{animation-duration:.01s}}
-details.faq{border-bottom:1px solid #2A3147}
-details.faq summary{list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 8px;cursor:pointer;min-height:44px;box-sizing:border-box;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:19px;color:#EEF0F6}
-details.faq summary::-webkit-details-marker{display:none}
-details.faq summary::after{content:"+";font-size:26px;line-height:1;color:#8FA2FF;flex:none}
-details.faq[open] summary::after{content:"\2212"}
-details.faq summary:hover{background:#1C2233}
-details.faq summary:focus-visible{outline:2px solid #8FA2FF;outline-offset:3px}
-details.faq p{margin:0;padding:0 8px 22px;color:#A9B0C3;max-width:46em}
 .lg{position:relative;display:inline-block;width:34px;height:34px;clip-path:circle(45.8% at 50% 50%);overflow:hidden;line-height:0;flex:none}
 .lg::after{content:"";position:absolute;top:-30%;bottom:-30%;left:0;width:34%;background:linear-gradient(100deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.08) 15%,rgba(255,255,255,.35) 32%,rgba(255,255,255,.9) 50%,rgba(255,255,255,.35) 68%,rgba(255,255,255,.08) 85%,rgba(255,255,255,0) 100%);transform:translateX(-180%) skewX(0deg);animation:lgs 10s linear .8s infinite;opacity:.6;pointer-events:none}
 @keyframes lgs{0%{transform:translateX(-180%) skewX(0deg)}5.4%,100%{transform:translateX(420%) skewX(0deg)}}
