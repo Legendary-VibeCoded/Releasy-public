@@ -1,4 +1,4 @@
-/* Animated favicon: a small light glare sweeps across the disc every 7 seconds. Best effort, falls back to the still icon. */
+/* Animated favicon: a small light glare sweeps across the disc every 10 seconds. Best effort, falls back to the still icon. */
 (function(){
   try{
     if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;
@@ -11,7 +11,7 @@
       var cx=-S*0.4+p*S*1.8;
       var g=x.createLinearGradient(cx-S*0.25,0,cx+S*0.25,S*0.27);
       g.addColorStop(0,'rgba(255,255,255,0)');g.addColorStop(.22,'rgba(255,255,255,.18)');g.addColorStop(.5,'rgba(255,255,255,.9)');g.addColorStop(.78,'rgba(255,255,255,.18)');g.addColorStop(1,'rgba(255,255,255,0)');
-      x.fillStyle=g;x.fillRect(0,0,S,S);x.restore();
+      x.globalAlpha=.6;x.fillStyle=g;x.fillRect(0,0,S,S);x.restore();
       return c.toDataURL('image/png');
     }
     function run(){
@@ -26,6 +26,6 @@
         else{document.head.removeChild(a);olds.forEach(function(l){document.head.appendChild(l)});running=false}
       })(t0);
     }
-    img.onload=function(){setTimeout(run,1200);setInterval(run,7000)};
+    img.onload=function(){setTimeout(run,1200);setInterval(run,10000)};
   }catch(e){}
 })();
