@@ -9,7 +9,7 @@
       x.clearRect(0,0,S,S);x.save();x.beginPath();x.arc(S/2,S/2,S*0.458,0,7);x.clip();
       x.drawImage(img,0,0,S,S);
       var cx=-S*0.4+p*S*1.8;
-      var g=x.createLinearGradient(cx-S*0.25,0,cx+S*0.25,S*0.27);
+      var g=x.createLinearGradient(cx-S*0.25,0,cx+S*0.25,S*0.13);
       g.addColorStop(0,'rgba(255,255,255,0)');g.addColorStop(.22,'rgba(255,255,255,.18)');g.addColorStop(.5,'rgba(255,255,255,.9)');g.addColorStop(.78,'rgba(255,255,255,.18)');g.addColorStop(1,'rgba(255,255,255,0)');
       x.globalAlpha=.6;x.fillStyle=g;x.fillRect(0,0,S,S);x.restore();
       return c.toDataURL('image/png');
