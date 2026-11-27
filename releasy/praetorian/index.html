@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" type="image/png" sizes="32x32" href="/releasy/icons/favicon-32.png">
+<title>Praetorian Terminal</title>
+</head>
+<body>
+<style>
+:root{--bg:#000;--fg:#33ff66;--dim:#1a8a3a;--warn:#ffd35c;--bad:#ff5c5c;--mono:ui-monospace,"Cascadia Mono","SFMono-Regular",Menlo,Consolas,"Liberation Mono",monospace;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);overflow:hidden}
+body{font-family:ui-monospace,"Cascadia Mono","SFMono-Regular",Menlo,Consolas,"Liberation Mono",monospace}
+#rain{position:fixed;inset:0;width:100%;height:100%;opacity:.16;pointer-events:none}
+#crt{position:fixed;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,.18) 0 1px,transparent 1px 3px);mix-blend-mode:multiply}
+#stage{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+  padding:max(56px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-right,0px))}
+#term{margin:0;background:#000;color:var(--fg);font:inherit;font-size:clamp(8px,1.75vw,15px);line-height:1.25;white-space:pre;
+  text-shadow:0 0 6px rgba(51,255,102,.55);cursor:text;max-width:100%}
+#term .d{color:var(--dim)} #term .w{color:var(--warn);text-shadow:0 0 6px rgba(255,211,92,.5)} #term .bw1{color:#ff5c5c;text-shadow:0 0 6px rgba(255,92,92,.6)} #term .bw2{color:#fff;text-shadow:0 0 6px rgba(255,255,255,.6)} #term .b{color:var(--bad);text-shadow:0 0 6px rgba(255,92,92,.5)}
+.cur{display:inline-block;color:var(--fg)}
+.row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+button,input{font-family:var(--mono)}
+button{font:inherit;font-family:var(--mono);font-size:13px;color:var(--fg);background:#000;border:1px solid var(--dim);padding:8px 14px;cursor:pointer;letter-spacing:.06em;text-transform:uppercase;min-height:40px}
+button:hover,button:focus-visible{background:var(--fg);color:#000;outline:none}
+#back{position:fixed;top:max(12px,env(safe-area-inset-top,0px));left:max(16px,env(safe-area-inset-left,0px));z-index:5}
+#hiddenIn{position:fixed;opacity:0;pointer-events:none;left:0;top:0;width:1px;height:1px}
+#home{position:fixed;inset:0;background:#000;display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:9;text-align:center;padding:24px}
+#home p{margin:0;color:var(--dim);max-width:46ch;line-height:1.5}
+#alert{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:7;padding:24px;background:rgba(0,0,0,.35)}
+#alert pre{margin:0;background:#000;color:var(--bad);font:inherit;font-size:clamp(9px,2vw,17px);line-height:1.3;white-space:pre;text-shadow:0 0 6px rgba(255,92,92,.5)}
+#fin{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;background:#000;z-index:8;padding:24px;color:var(--bad);text-shadow:0 0 8px rgba(255,92,92,.6)}
+#fin pre{margin:0;font:inherit;font-size:clamp(9px,1.9vw,16px);line-height:1.5;white-space:pre-wrap;max-width:100%}
+#fin h1{margin:0 0 18px;font-size:clamp(16px,3.6vw,32px);letter-spacing:.16em;text-align:center}
+#noise{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:6;display:none}
+#finWrap{max-width:100%}
+#finEnd{margin-top:1.5em !important}
+#recon{min-height:6em;margin:0;overflow:hidden;text-align:left}
+#fin h1{animation:bk 1.4s steps(1) infinite}
+@keyframes bk{0%{opacity:1}50%{opacity:0}}
+#fin .ret{margin-top:26px;text-align:center}
+#fin .ret p{margin:0 0 12px}
+#fin .ret button{color:var(--bad);border-color:var(--bad)}
+#fin .ret button:hover,#fin .ret button:focus-visible{background:var(--bad);color:#000}
+button[disabled]{opacity:.35;pointer-events:none}
+@media (prefers-reduced-motion:reduce){#fin h1{animation:none}}
+</style>
+
+<canvas id="rain" aria-hidden="true"></canvas>
+<div id="crt" aria-hidden="true"></div>
+<button id="back" type="button">&lt; Back to Releasy</button>
+<div id="stage">
+  <pre id="term" role="log" aria-live="polite" aria-label="Praetorian terminal"></pre>
+  <div class="row"><button id="cancel" type="button">[ Cancel login ]</button></div>
+</div>
+<div id="alert" role="alert"><pre id="alertTxt"></pre></div><canvas id="noise" aria-hidden="true"></canvas>
+<div id="fin"><h1>PRAETORIAN NETWORK DISCONNECTED</h1><div id="finWrap"><pre id="finTxt"></pre><pre id="recon"></pre><pre id="finEnd">This terminal is no longer connected to anything.</pre></div><div class="ret"><p>To continue, go back to Releasy.</p><button id="ret" type="button">[ Return to Releasy ]</button></div></div>
+<input id="hiddenIn" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Terminal input">
+<div id="home">
+  <p>You are back in Releasy.<br>(In the app this button simply closes the terminal.)</p>
+  <button id="again" type="button">Open the terminal again</button>
+</div>
+
+<script>
+(function(){
+  // ---- cosmetic account: it checks nothing real. Change these two to taste. ----
+  var ACCOUNT = {user:'legendary', pass:'mozart'};
+  // In Releasy, replace this with the code that closes the terminal screen.
+  function leaveTerminal(){ stopAll(); location.href='/releasy/'; }
+
+  var W=68, ROWS=20, reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var term=document.getElementById('term'), inp=document.getElementById('hiddenIn');
+  var staticLvl=0, lockTimer=0, rainRGB='51,255,102';
+  var log=[], mode='boot', userTyped='', userName='', attempts=0, timers=[], alive=true, hexOff=0;
+
+  function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;')}
+  function pad(s,n){s=String(s); return s.length>=n? s.slice(0,n) : s+' '.repeat(n-s.length)}
+  function line(text,cls){log.push({t:text,c:cls||''}); if(log.length>200)log.shift(); render()}
+  function later(fn,ms){var id=setTimeout(function(){if(alive)fn()},ms); timers.push(id)}
+
+  var ART=[
+    "   .-----------------------.   ",
+    "   |  P R A E T O R I A N  |   ",
+    "   |  ~~~~~~~~~~~~~~~~~~~  |   ",
+    "   |     S Y S T E M S     |   ",
+    "   '-----------------------'   "
+  ];
+
+  function frameTop(){ return '+'+'='.repeat(W-2)+'+' }
+  function row(txt,cls){
+    var body=pad(txt,W-4);
+    var h=esc(body);
+    if(cls) h='<span class="'+cls+'">'+h+'</span>';
+    return '<span class="d">|</span> '+h+' <span class="d">|</span>';
+  }
+  function hexLine(){
+    var s='',i; for(i=0;i<16;i++){ s+=((hexOff*7+i*37+(hexOff>>3)*13)&255).toString(16).padStart(2,'0')+' ' }
+    return pad('0x'+(hexOff*16).toString(16).padStart(6,'0')+'  '+s,W-4);
+  }
+  function promptText(){
+    if(mode==='user') return 'LOGIN: '+userTyped;
+    if(mode==='pass') return 'PASSWORD: '+'*'.repeat(userTyped.length);
+    if(mode==='cmd')  return '> '+userTyped;
+    return '';
+  }
+  function render(){
+    var ph=Math.floor(Date.now()/500)%2, out=[];
+    out.push('<span class="d">'+frameTop()+'</span>');
+    ART.forEach(function(a){ out.push(row(' '.repeat(Math.floor((W-4-a.length)/2))+a)) });
+    out.push('<span class="d">+'+'-'.repeat(W-2)+'+</span>');
+    var bodyRows=ROWS-ART.length-5;
+    var shown=log.slice(-bodyRows);
+    var inputActive=(mode==='user'||mode==='pass'||mode==='cmd');
+    // bottom-anchored like a real terminal: old lines scroll up, the prompt row is always last
+    var cut=bodyRows-1;
+    var shown=log.slice(-cut);
+    for(var i=shown.length;i<cut;i++) out.push(row(''));
+    shown.forEach(function(l){ out.push(row(l.t, l.c==='bw'? (ph?'bw1':'bw2') : l.c)) });
+    if(inputActive){
+      var p=promptText(); var room=W-4-1;
+      if(p.length>room) p=p.slice(p.length-room);
+      out.push('<span class="d">|</span> '+esc(p)+'<span class="cur">'+(ph?' ':'_')+'</span>'+' '.repeat(Math.max(0,W-4-p.length-1))+' <span class="d">|</span>');
+    } else out.push(row(''));
+    out.push('<span class="d">+'+'-'.repeat(W-2)+'+</span>');
+    out.push('<span class="d">|</span> <span class="d">'+esc(hexLine())+'</span> <span class="d">|</span>');
+    out.push('<span class="d">'+frameTop()+'</span>');
+    var html=out.join('\n');
+    if(staticLvl>0){
+      var G='#%&@$?/\\|<>[]{}01=+*~^;:';
+      html=html.replace(/>([^<]+)</g,function(m,t){
+        return '>'+t.replace(/&(?:amp|lt);|./g,function(ch){
+          if(ch===' '||ch==='\n') return Math.random()<staticLvl*.25? G[Math.floor(Math.random()*G.length)]:ch;
+          return Math.random()<staticLvl? G[Math.floor(Math.random()*G.length)]:ch;
+        })+'<';
+      });
+      var j=staticLvl*14;
+      term.style.transform='translate('+((Math.random()-.5)*j).toFixed(1)+'px,'+((Math.random()-.5)*j*.4).toFixed(1)+'px)';
+      term.style.filter=Math.random()<staticLvl*.5?'hue-rotate('+Math.floor(Math.random()*360)+'deg)':'';
+    } else { term.style.transform=''; term.style.filter=''; }
+    term.innerHTML=html;
+  }
+
+  function boot(){
+    log=[]; mode='boot'; userTyped=''; attempts=0; render();
+    var seq=[
+      ['PRAETORIAN SYSTEMS // SECURE NODE 07','w',250],
+      ['Opening channel ................. OK','',420],
+      ['Exchanging keys ................. OK','',420],
+      ['Verifying terminal .............. OK','',420],
+      ['','',150],
+      ['RESTRICTED ACCESS. AUTHORIZED PERSONNEL ONLY.','w',350],
+      ['Every session is recorded and reviewed.','',300],
+      ['Unauthorized use will be traced.','',300],
+      ['','',150]
+    ];
+    var t=0;
+    seq.forEach(function(s){ t+=reduce?30:s[2]; later(function(){line(s[0],s[1])},t) });
+    later(function(){ mode='user'; userTyped=''; render(); focusIn() }, t+200);
+  }
+
+  function submit(){
+    var v=userTyped; userTyped='';
+    if(mode==='user'){
+      line('LOGIN: '+v); userName=v; mode='pass'; render();
+    } else if(mode==='pass'){
+      line('PASSWORD: '+'*'.repeat(v.length));
+      if(userName.toLowerCase()===ACCOUNT.user && v===ACCOUNT.pass){ granted() } else { denied() }
+    } else if(mode==='cmd'){
+      line('> '+v); command(v.trim().toLowerCase());
+    }
+  }
+  function denied(){
+    attempts++; mode='wait'; render();
+    later(function(){
+      line('*** Invalid login. Admin notification sent. ***','bw');
+      line(''); mode='user'; render();
+      if(!lockTimer){ lockTimer=1; later(lockdown,5000); }
+    },500);
+  }
+  function lockdown(){
+    mode='locked'; userTyped=''; inp.value=''; inp.blur(); render();
+    var bk=document.getElementById('back'), cn=document.getElementById('cancel');
+    bk.disabled=true; cn.disabled=true;
+    var al=document.getElementById('alert'), at=document.getElementById('alertTxt');
+    var w=46, c=function(t){var l=Math.floor((w-2-t.length)/2); return '|'+' '.repeat(l)+t+' '.repeat(w-2-l-t.length)+'|'};
+    var e='|'+' '.repeat(w-2)+'|', edge='+'+'='.repeat(w-2)+'+';
+    function draw(lines){ at.textContent=[edge,e].concat(lines.map(c),[e,edge]).join('\n'); }
+    function bar(p){ var n=Math.round(p*24); return '['+'#'.repeat(n)+'.'.repeat(24-n)+'] '+String(Math.round(p*100)).padStart(3,' ')+'%'; }
+    var ip='203.0.113.'+(2+Math.floor(Math.random()*250));  // documentation range: not a real address
+    at.style.color=''; at.style.textShadow='';
+    draw(['YOU HAVE BEEN LOCATED',"Thought we wouldn't see you?",'','Trace in progress',bar(0)]);
+    al.style.display='flex';
+    var t0b=performance.now(), FD=reduce?300:2200;
+    later(function fill(){
+      var p=Math.min(1,(performance.now()-t0b)/FD);
+      draw(['YOU HAVE BEEN LOCATED',"Thought we wouldn't see you?",'',p<1?'Trace in progress':'Trace complete.',bar(p)]);
+      if(p<1){ later(fill,50); return; }
+      later(function(){
+        // quick white moment: the disconnect notice
+        at.style.color='#fff'; at.style.textShadow='0 0 6px rgba(255,255,255,.6)';
+        draw(['DISCONNECT packet received','from '+ip,'','Disconnecting from network...','']);
+        later(function(){
+          al.style.display='none'; at.style.color=''; at.style.textShadow='';
+          startStatic();
+        },reduce?400:1400);
+      },reduce?300:1100);
+    },500);
+    function startStatic(){
+      var t0=performance.now(), D=3000;
+      (function tick(){
+        if(!alive) return;
+        var p=Math.min(1,(performance.now()-t0)/D);
+        staticLvl=Math.pow(p,1.6)*0.9+0.02; render(); noise(staticLvl);
+        if(p<1) setTimeout(tick,reduce?200:60); else setTimeout(final,350);
+      })();
+    }
+  }
+  var nz=document.getElementById('noise'), nx=nz.getContext('2d');
+  var PAL=['#ff3b3b','#33ff66','#2bd9ff','#ff3bf0','#ffd35c','#ffffff'];
+  function noise(l){
+    if(l<=0){ nz.style.display='none'; nx.clearRect(0,0,nz.width,nz.height); return; }
+    nz.style.display='block';
+    if(nz.width!==innerWidth||nz.height!==innerHeight){ nz.width=innerWidth; nz.height=innerHeight; }
+    nx.clearRect(0,0,nz.width,nz.height);
+    var G='#%&@$?/\\|<>[]{}01=+*~^;:',i,n=Math.floor(l*320),fs=14;
+    nx.font=fs+'px ui-monospace,Menlo,Consolas,monospace';
+    for(i=0;i<n;i++){
+      nx.fillStyle=PAL[Math.floor(Math.random()*PAL.length)];
+      nx.globalAlpha=.35+Math.random()*.6;
+      nx.fillText(G[Math.floor(Math.random()*G.length)],Math.random()*nz.width,Math.random()*nz.height);
+    }
+    var bars=Math.floor(l*7);
+    for(i=0;i<bars;i++){
+      nx.fillStyle=PAL[Math.floor(Math.random()*PAL.length)];
+      nx.globalAlpha=.05+Math.random()*.18*l;
+      nx.fillRect(0,Math.random()*nz.height,nz.width,2+Math.random()*30*l);
+    }
+    if(Math.random()<l*.35){ nx.globalAlpha=.08+Math.random()*.12; nx.fillStyle=PAL[Math.floor(Math.random()*3)]; nx.fillRect(0,0,nz.width,nz.height); }
+    nx.globalAlpha=1;
+  }
+  function gps(){
+    var la=(Math.random()*130-60), lo=(Math.random()*360-180);
+    return Math.abs(la).toFixed(4)+' '+(la<0?'S':'N')+', '+Math.abs(lo).toFixed(4)+' '+(lo<0?'W':'E');
+  }
+  function final(){
+    staticLvl=0; noise(0); rainRGB='255,92,92';
+    var d=new Date(), hx=function(n){return Math.floor(Math.random()*Math.pow(16,n)).toString(16).toUpperCase().padStart(n,'0')};
+    document.getElementById('finTxt').textContent=[
+      'ERR 0x'+hx(4)+'-'+hx(2)+'  ::  REMOTE HOST CLOSED THE CHANNEL',
+      'NODE 07  ::  UPLINK LOST  ::  SIGNAL 0 dBm',
+      'SESSION '+hx(8)+'  ::  TERMINATED BY WATCHDOG',
+      'TRACE  ::  COMPLETE',
+      'TRACE GPS  ::  '+gps(),
+      'ORIGIN ::  [REDACTED]',
+      'TIME   ::  '+d.toISOString().replace('T',' ').slice(0,19)+' UTC',
+      ''
+    ].join('\n');
+    document.getElementById('stage').style.display='none';
+    document.getElementById('fin').style.display='flex';
+    var bk=document.getElementById('back'); bk.disabled=false; bk.style.zIndex=20;
+    mode='dead';
+    var rl=[], rc=document.getElementById('recon');
+    function show(){ rc.textContent=rl.slice(-4).join('\n') }
+    (function cycle(){
+      var n=0, base='Trying to reconnect';
+      rl.push(base); show();
+      (function dots(){
+        if(n<7){ n++; rl[rl.length-1]=base+'.'.repeat(n); show(); later(dots,reduce?60:220); }
+        else later(function(){ rl.push('Server refused connection (407)'); show();
+          later(function(){ rl.push('Retrying'); show(); later(function(){ cycle(); },reduce?300:900); },reduce?300:700); },400);
+      })();
+    })();
+  }
+  function granted(){
+    mode='wait'; render();
+    later(function(){
+      line('');
+      line('Identity confirmed.','w');
+      line('Welcome back, '+ACCOUNT.user+'. Last session: never.','');
+      line('');
+      line('  help     list commands','d');
+      line('  status   node status','d');
+      line('  clear    clear the screen','d');
+      line('  logout   end the session','d');
+      line('');
+      mode='cmd'; render();
+    },700);
+  }
+  function command(c){
+    if(c==='help'){ line('help, status, clear, logout'); }
+    else if(c==='status'){ line('Node 07 .... ONLINE'); line('Uplink ...... STABLE'); line('Watchers .... 3'); line('Your trace .. none (yet)','w'); }
+    else if(c==='clear'){ log=[]; }
+    else if(c==='logout'||c==='exit'||c==='quit'){ line('Session closed.','w'); mode='wait'; render(); later(leaveTerminal,900); return; }
+    else if(c===''){ }
+    else { line('Unknown command: '+c,'b'); }
+    render();
+  }
+
+  inp.addEventListener('input',function(){
+    userTyped=inp.value.slice(0,40); render();
+  });
+  inp.addEventListener('keydown',function(e){
+    if(e.key==='Enter'){ e.preventDefault(); if(mode==='user'||mode==='pass'||mode==='cmd'){ submit(); inp.value=''; } }
+    if(e.key==='Escape'){ e.preventDefault(); cancel(); }
+  });
+  function focusIn(){ try{inp.focus({preventScroll:true})}catch(e){} }
+  function inputMode(){ return mode==='user'||mode==='pass'||mode==='cmd' }
+  // wherever you click or tap, the cursor goes back to the prompt
+  document.addEventListener('mousedown',function(e){ e.preventDefault(); if(inputMode()) focusIn() });
+  document.addEventListener('click',function(){ if(inputMode()) focusIn() });
+  document.addEventListener('touchend',function(){ if(inputMode()) focusIn() });
+  inp.addEventListener('blur',function(){ if(inputMode() && alive) setTimeout(focusIn,0) });
+
+  function cancel(){
+    if(mode==='locked') return;
+    if(mode==='dead'){ leaveTerminal(); return; }
+    line('Login cancelled.','w'); mode='wait'; render(); later(leaveTerminal,500);
+  }
+  document.getElementById('cancel').addEventListener('click',cancel);
+  document.getElementById('back').addEventListener('click',cancel);
+  document.getElementById('ret').addEventListener('click',cancel);
+  document.getElementById('again').addEventListener('click',function(){
+    document.getElementById('home').style.display='none'; start();
+  });
+
+  // ---- animated ascii rain behind the frame (subtle) ----
+  var cv=document.getElementById('rain'), cx=cv.getContext('2d'), cols=[], fs=16, raf=0, last=0;
+  var CH='01<>/\\|[]{}#$%&*+=~^:;.';
+  function size(){
+    var d=Math.min(devicePixelRatio||1,2); cv.width=innerWidth*d; cv.height=innerHeight*d;
+    cx.setTransform(d,0,0,d,0,0); cx.font=fs+'px ui-monospace,Menlo,Consolas,monospace';
+    var n=Math.ceil(innerWidth/fs); cols=[];
+    for(var i=0;i<n;i++) cols.push({y:Math.random()*innerHeight/fs,v:.15+Math.random()*.35,l:6+Math.floor(Math.random()*14)});
+  }
+  function frame(ts){
+    if(!alive) return; raf=requestAnimationFrame(frame);
+    if(ts-last<70) return; last=ts;
+    hexOff++; if(mode!=='boot') render();
+    cx.clearRect(0,0,innerWidth,innerHeight);
+    cols.forEach(function(c,i){
+      for(var k=0;k<c.l;k++){
+        var yy=(c.y-k)*fs; if(yy<-fs||yy>innerHeight+fs) continue;
+        cx.fillStyle='rgba('+((staticLvl>0&&Math.random()<staticLvl*.4)?['255,59,59','43,217,255','255,59,240','255,211,92'][Math.floor(Math.random()*4)]:rainRGB)+','+(1-k/c.l)+')';
+        cx.fillText(CH[(i*7+k*3+Math.floor(c.y))%CH.length],i*fs,yy);
+      }
+      c.y+=c.v; if((c.y-c.l)*fs>innerHeight){c.y=0;c.v=.15+Math.random()*.35}
+    });
+  }
+  function stopAll(){ alive=false; cancelAnimationFrame(raf); timers.forEach(clearTimeout); timers=[] }
+  function start(){
+    alive=true; staticLvl=0; noise(0); lockTimer=0; rainRGB='51,255,102';
+    ['alert','fin'].forEach(function(i){document.getElementById(i).style.display='none'});
+    document.getElementById('stage').style.display='flex';
+    document.getElementById('back').disabled=false; document.getElementById('cancel').disabled=false; size(); userName=''; boot();
+    if(!reduce){ last=0; raf=requestAnimationFrame(frame) }
+    else { cx.clearRect(0,0,innerWidth,innerHeight) }
+  }
+  addEventListener('resize',function(){ if(alive) size() });
+  start();
+})();
+</script>
+
+</body>
+</html>
