@@ -232,7 +232,7 @@ dialog#nosale button:focus-visible{outline:2px solid #8FA2FF;outline-offset:3px}
 #tourAnim{--line:#2A3147;--fg:#EEF0F6;--mut:#A9B0C3;--acc2:#8FA2FF;--hl:#8FA2FF;margin-top:48px}
 #tourAnim *{box-sizing:border-box}
 
-.ta-stage{position:relative;width:100%;aspect-ratio:1442/932;transition:height .55s cubic-bezier(.4,0,.2,1);overflow:hidden;border-radius:14px;border:1px solid var(--line);background:#000;max-width:100%;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ta-stage{position:relative;width:100%;aspect-ratio:1442/932;transition:height .25s ease-out;overflow:hidden;border-radius:14px;border:1px solid var(--line);background:#000;max-width:100%;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .ta-pan{position:absolute;left:0;top:0;width:100%;transition:transform .35s ease-out}
 #taLayers{z-index:0}
 #taHls{z-index:6;pointer-events:none}
@@ -296,8 +296,11 @@ function ease(p){return p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2}
 function view(v){var s=v.s,tx=W/2-v.x*k*s,ty=H/2-v.y*k*s;tx=clamp(tx,W-W*s,0);ty=clamp(ty,H-H*s,0);return{tx:tx,ty:ty,s:s}}
 function lerpV(a,b,p){var A=view(a),B=view(b);return{tx:A.tx+(B.tx-A.tx)*p,ty:A.ty+(B.ty-A.ty)*p,s:A.s+(B.s-A.s)*p}}
 var hover=false,sticky=false,passed=false,animUntil=0,lastY=0,lastInit=false;
-function bandFor(){var open=W<700||hover||sticky;return open?Math.round(H):Math.round(W*0.355)}
-function applyBand(){var h=bandFor()+2;stage.classList.toggle('small',bandFor()<H-1);if(stage.style.height!==h+'px'){stage.style.height=h+'px';animUntil=performance.now()+700;if(!playing)settle()}}
+var topNow=1e9;
+// Banner height: small by default; hovering opens it fully. While scrolling it grows with the room left under the top of the window
+// (so the text above stays on screen), reaching full size once that room is big enough. It depends on position only, never on its own size.
+function bandFor(){if(W<700||hover)return Math.round(H);var vh=window.innerHeight||document.documentElement.clientHeight,avail=vh-topNow-60;return Math.round(Math.max(W*0.355,Math.min(H,avail)))}
+function applyBand(){var h=bandFor()+2;stage.classList.toggle('small',bandFor()<H*0.75);if(stage.style.height!==h+'px'){stage.style.height=h+'px';animUntil=performance.now()+400;if(!playing)settle()}}
 function settle(){draw();if(performance.now()<animUntil)requestAnimationFrame(settle)}
 function size(){W=stage.clientWidth;H=W*IH/IW;k=W/IW;layers.style.height=hls.style.height=H+'px';Object.keys(els).forEach(function(n){els[n].style.width=W+'px';els[n].style.height=H+'px'});applyBand();draw()}
 function setCaption(i){if(i===curIdx)return;curIdx=i;var sc=S[i];cap.style.opacity=0;setTimeout(function(){if(curIdx!==i)return;capN.textContent=sc.n+' of '+S.length;capT.textContent=sc.t;capD.textContent=sc.d;cap.style.opacity=1},180);segs.forEach(function(b,j){if(j===i)b.setAttribute('aria-current','true');else b.removeAttribute('aria-current')})}
@@ -323,18 +326,11 @@ function seek(ms){t=ms+(reduce?DUR-200:600);if(reduce){userPaused=true}draw();up
 var root=document.getElementById('tourAnim');
 var px=-1,py=-1;
 function inside(){var r=root.getBoundingClientRect();return px>=r.left&&px<=r.right&&py>=r.top&&py<=r.bottom}
-function recheck(){var top=root.getBoundingClientRect().top,vh=window.innerHeight||document.documentElement.clientHeight,h=inside();
- // Opens when the top of the animation is nearing the top of the window (the text above it is scrolling away) and stays open while scrolling down.
- // Scrolling back up it closes a little earlier (while the text below it is still on screen).
- var y=window.pageYOffset||document.documentElement.scrollTop,dy=y-lastY;lastY=y;
- var st=sticky;
- if(dy>0){if(top<=vh*0.2)st=true}else if(dy<0){if(top>vh*0.08)st=false}else{st=top<=vh*0.2?true:(lastInit?st:false)}
- lastInit=true;
- if(h!==hover||st!==sticky){hover=h;sticky=st;applyBand()}}
-// starts small; grows while the pointer is over it (also when the page scrolls under a resting pointer) or when its top nears the top of the window
+function recheck(){topNow=root.getBoundingClientRect().top;var h=inside();if(h!==hover)hover=h;applyBand()}
+// starts small; grows while the pointer is over it (also when the page scrolls under a resting pointer) ; while scrolling it grows with the room left below the top of the window
 document.addEventListener('mousemove',function(e){px=e.clientX;py=e.clientY;recheck()},{passive:true});
 root.addEventListener('mouseleave',recheck);document.documentElement.addEventListener('mouseleave',function(){px=-1;py=-1;recheck()});
-window.addEventListener('scroll',recheck,{passive:true});
+window.addEventListener('scroll',recheck,{passive:true});window.addEventListener('resize',recheck);recheck();
 stage.addEventListener('click',function(){if(reduce){reduce=false;userPaused=false}else userPaused=!userPaused;update()});
 document.addEventListener('visibilitychange',update);
 var loaded=false;function load(){if(loaded)return;loaded=true;Object.keys(els).forEach(function(n){var im=els[n].firstChild;im.src=im.dataset.src})}
