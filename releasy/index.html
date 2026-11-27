@@ -295,7 +295,7 @@ function clamp(x,a,b){return Math.max(a,Math.min(b,x))}
 function ease(p){return p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2}
 function view(v){var s=v.s,tx=W/2-v.x*k*s,ty=H/2-v.y*k*s;tx=clamp(tx,W-W*s,0);ty=clamp(ty,H-H*s,0);return{tx:tx,ty:ty,s:s}}
 function lerpV(a,b,p){var A=view(a),B=view(b);return{tx:A.tx+(B.tx-A.tx)*p,ty:A.ty+(B.ty-A.ty)*p,s:A.s+(B.s-A.s)*p}}
-var hover=false,sticky=false,passed=false,animUntil=0;
+var hover=false,sticky=false,passed=false,animUntil=0,lastY=0,lastInit=false;
 function bandFor(){var open=W<700||hover||sticky;return open?Math.round(H):Math.round(W*0.355)}
 function applyBand(){var h=bandFor()+2;stage.classList.toggle('small',bandFor()<H-1);if(stage.style.height!==h+'px'){stage.style.height=h+'px';animUntil=performance.now()+700;if(!playing)settle()}}
 function settle(){draw();if(performance.now()<animUntil)requestAnimationFrame(settle)}
@@ -324,9 +324,12 @@ var root=document.getElementById('tourAnim');
 var px=-1,py=-1;
 function inside(){var r=root.getBoundingClientRect();return px>=r.left&&px<=r.right&&py>=r.top&&py<=r.bottom}
 function recheck(){var top=root.getBoundingClientRect().top,vh=window.innerHeight||document.documentElement.clientHeight,h=inside();
- // opens when the top of the animation is nearing the top of the window (the text above it is scrolling away).
- // Once open it stays open while scrolling down; scrolling back up above that point closes it again.
- var st=top<=vh*0.2;
+ // Opens when the top of the animation is nearing the top of the window (the text above it is scrolling away) and stays open while scrolling down.
+ // Scrolling back up it closes a little earlier (while the text below it is still on screen).
+ var y=window.pageYOffset||document.documentElement.scrollTop,dy=y-lastY;lastY=y;
+ var st=sticky;
+ if(dy>0){if(top<=vh*0.2)st=true}else if(dy<0){if(top>vh*0.08)st=false}else{st=top<=vh*0.2?true:(lastInit?st:false)}
+ lastInit=true;
  if(h!==hover||st!==sticky){hover=h;sticky=st;applyBand()}}
 // starts small; grows while the pointer is over it (also when the page scrolls under a resting pointer) or when its top nears the top of the window
 document.addEventListener('mousemove',function(e){px=e.clientX;py=e.clientY;recheck()},{passive:true});
