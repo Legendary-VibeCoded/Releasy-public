@@ -32,6 +32,25 @@ p[id]:target{border-radius:6px;animation:tgt 3s ease-out}
 .brand-ver{font-family:'Space Grotesk',sans-serif;font-weight:400;font-size:.7em;letter-spacing:0;color:#98A0AF;opacity:.55;align-self:center;margin-left:-6px;position:relative;top:2px}
 .dl{display:inline-flex;align-items:center;gap:10px;min-height:52px;padding:0 30px;border-radius:12px;background:#3F5BF0;color:#fff;font-weight:600;font-size:18px;transition:background-color .2s}.dl:hover{background:#4D69FF}
 .dl svg{width:20px;height:20px}
+.wrap.wide{max-width:1100px}
+.doc{display:grid;grid-template-columns:240px minmax(0,1fr);gap:48px;align-items:start}
+.toc{position:sticky;top:24px;max-height:calc(100vh - 48px);overflow:auto;padding:4px 0;font-size:14px}
+.toc b{display:block;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#7F879C;margin:0 0 10px;font-weight:600}
+.toc a{display:block;color:#A9B0C3;padding:5px 10px;border-left:2px solid #2A3147;line-height:1.35}
+.toc a:hover{color:#fff}.toc a.on{color:#fff;border-left-color:#8FA2FF;background:rgba(143,162,255,.08)}
+.docbody{max-width:760px;min-width:0}
+.docbody section{scroll-margin-top:24px;padding-top:8px;margin-bottom:40px}
+.docbody h2{margin:0 0 12px;font-size:28px;padding-top:8px}
+.docbody h4{font-family:'Space Grotesk',sans-serif;font-size:17px;color:#EEF0F6;margin:26px 0 8px}
+.docbody ol{padding-left:22px;margin:0 0 14px;display:flex;flex-direction:column;gap:6px;color:#A9B0C3}
+.docbody ul ul,.docbody ol ul,.docbody ul ol{margin:6px 0 0}
+.docbody kbd{font-family:ui-monospace,Consolas,monospace;font-size:.88em;background:#1C2233;border:1px solid #2A3147;border-bottom-width:2px;border-radius:5px;padding:1px 6px;color:#EEF0F6;white-space:nowrap}
+.docbody i{color:#C9CFDF}
+.hlp-tbl{overflow-x:auto;margin:0 0 16px;border:1px solid #2A3147;border-radius:10px}
+.hlp-tbl table{border-collapse:collapse;width:100%;font-size:14.5px}
+.hlp-tbl th,.hlp-tbl td{text-align:left;padding:9px 14px;border-bottom:1px solid #2A3147;vertical-align:top;color:#A9B0C3}
+.hlp-tbl th{color:#EEF0F6;background:#151926;font-weight:600}.hlp-tbl tr:last-child td{border-bottom:0}
+@media (max-width:860px){.doc{grid-template-columns:minmax(0,1fr);gap:20px}.toc{position:static;max-height:none;border:1px solid #2A3147;border-radius:12px;padding:14px 16px;background:#151926}.toc nav{display:flex;flex-wrap:wrap;gap:4px 14px}.toc a{border:0;padding:2px 0}.toc a.on{background:none}}
 a.l{color:#8FA2FF}a.l:hover{text-decoration:underline}
 .ph{background:#3a2f12;color:#ffd479;border-radius:4px;padding:0 5px;font-weight:600}
 .foot{max-width:1100px;margin:64px auto 0;padding:28px 24px 56px;box-sizing:border-box;border-top:1px solid #2A3147;color:#7F879C;font-size:14px;display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-between}
@@ -47,7 +66,7 @@ a.l{color:#8FA2FF}a.l:hover{text-decoration:underline}
 </head>
 <body>
 <div class="page">
-<div class="top"><a class="brand" href="/releasy/"><svg width="34" height="34" viewBox="0 0 34 34" role="img" aria-label="Releasy logo"><circle cx="17" cy="17" r="16" fill="#1C2233" stroke="#8FA2FF" stroke-width="1.5"/><circle cx="17" cy="17" r="10" fill="none" stroke="#3F5BF0" stroke-width="1" opacity=".8"/><circle cx="17" cy="17" r="4" fill="#8FA2FF"/><circle cx="17" cy="17" r="1.6" fill="#0C0E14"/></svg>Releasy<span class="brand-ver">v1.1.4</span></a><nav class="nav"><a href="/releasy/download/">Download</a><a href="/releasy/privacy/">Privacy</a><a href="/releasy/terms/">Terms</a><a href="/releasy/refunds/">Refunds</a><a href="/releasy/contact/">Contact</a><a class="back" href="/releasy/">Back to website</a></nav></div>
+<div class="top"><a class="brand" href="/releasy/"><svg width="34" height="34" viewBox="0 0 34 34" role="img" aria-label="Releasy logo"><circle cx="17" cy="17" r="16" fill="#1C2233" stroke="#8FA2FF" stroke-width="1.5"/><circle cx="17" cy="17" r="10" fill="none" stroke="#3F5BF0" stroke-width="1" opacity=".8"/><circle cx="17" cy="17" r="4" fill="#8FA2FF"/><circle cx="17" cy="17" r="1.6" fill="#0C0E14"/></svg>Releasy<span class="brand-ver">v1.1.4</span></a><nav class="nav"><a href="/releasy/download/">Download</a><a href="/releasy/documentation/">Documentation</a><a href="/releasy/privacy/">Privacy</a><a href="/releasy/terms/">Terms</a><a href="/releasy/refunds/">Refunds</a><a href="/releasy/contact/">Contact</a><a class="back" href="/releasy/">Back to website</a></nav></div>
 <main class="wrap">
 <h1>Thank you</h1>
 <p class="lead">Your payment went through. Your license key is on its way.</p>
@@ -58,7 +77,7 @@ a.l{color:#8FA2FF}a.l:hover{text-decoration:underline}
 </div>
 <p>No email after 15 minutes? <a class="l" href="/releasy/contact/">Contact me</a> and include the email address you bought with. Paddle also sends you a receipt, which has the link for refunds.</p>
 </main>
-<div class="foot"><div>&copy; Legendary Soft &middot; IJsselstein, the Netherlands</div><div class="links"><a href="/releasy/download/">Download</a><a href="/releasy/privacy/">Privacy</a><a href="/releasy/terms/">Terms</a><a href="/releasy/refunds/">Refunds</a><a href="/releasy/contact/">Contact</a></div></div>
+<div class="foot"><div>&copy; Legendary Soft &middot; IJsselstein, the Netherlands</div><div class="links"><a href="/releasy/download/">Download</a><a href="/releasy/documentation/">Documentation</a><a href="/releasy/privacy/">Privacy</a><a href="/releasy/terms/">Terms</a><a href="/releasy/refunds/">Refunds</a><a href="/releasy/contact/">Contact</a></div></div>
 <div class="legal"><div class="lp" id="lp"><button type="button" aria-expanded="false" aria-controls="lpane">Legal details</button><div class="pane" id="lpane" role="note"><div><b>Legendary Tunes</b></div><div><b>Address:</b> Hoepelmaker 11, 3401 TH IJsselstein, The Netherlands</div><div><b>KVK number:</b> 74813455</div><div><b>VAT ID (BTW-id):</b> NL002337562B54</div></div></div></div>
 <script>(function(){var lp=document.getElementById('lp'),b=lp.querySelector('button');b.addEventListener('click',function(){var o=lp.classList.toggle('open');b.setAttribute('aria-expanded',o)});document.addEventListener('click',function(e){if(!lp.contains(e.target)){lp.classList.remove('open');b.setAttribute('aria-expanded','false')}});document.addEventListener('keydown',function(e){if(e.key==='Escape'){lp.classList.remove('open');b.setAttribute('aria-expanded','false');b.blur()}});})();</script>
 </div>
