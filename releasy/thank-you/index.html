@@ -62,7 +62,14 @@ a.l{color:#8FA2FF}a.l:hover{text-decoration:underline}
 .lp .pane{display:none;position:absolute;right:0;bottom:calc(100% + 8px);width:min(340px,86vw);background:#151926;border:1px solid #2A3147;border-radius:12px;padding:16px 18px;box-shadow:0 12px 36px rgba(0,0,0,.5);font-size:13px;line-height:1.55;color:#A9B0C3;z-index:5;text-align:left}
 .lp:hover .pane,.lp:focus-within .pane,.lp.open .pane{display:block}
 .lp .pane b{color:#EEF0F6}.lp .pane div+div{margin-top:6px}
-.foot a{color:#A9B0C3}.foot a:hover{color:#FFFFFF}.foot .links{display:flex;flex-wrap:wrap;gap:6px 18px}</style>
+.foot a{color:#A9B0C3}.foot a:hover{color:#FFFFFF}.foot .links{display:flex;flex-wrap:wrap;gap:6px 18px}
+html{scroll-behavior:smooth}@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+#toTop{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:max(16px,env(safe-area-inset-bottom,0px));width:44px;height:44px;border-radius:50%;border:1px solid #2A3147;background:rgba(21,25,38,.88);color:#A9B0C3;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .25s,transform .25s,visibility .25s,background-color .2s,color .2s;z-index:50}
+#toTop.show{opacity:.85;visibility:visible;transform:none}
+#toTop:hover{opacity:1;background:#1E2436;color:#fff}
+#toTop:focus-visible{outline:2px solid #8FA2FF;outline-offset:3px}
+#toTop svg{width:18px;height:18px}
+@media (prefers-reduced-motion:reduce){#toTop{transition:none}}</style>
 </head>
 <body>
 <div class="page">
@@ -81,5 +88,14 @@ a.l{color:#8FA2FF}a.l:hover{text-decoration:underline}
 <div class="legal"><div class="lp" id="lp"><button type="button" aria-expanded="false" aria-controls="lpane">Legal details</button><div class="pane" id="lpane" role="note"><div><b>Legendary Tunes</b></div><div><b>Address:</b> Hoepelmaker 11, 3401 TH IJsselstein, The Netherlands</div><div><b>KVK number:</b> 74813455</div><div><b>VAT ID (BTW-id):</b> NL002337562B54</div></div></div></div>
 <script>(function(){var lp=document.getElementById('lp'),b=lp.querySelector('button');b.addEventListener('click',function(){var o=lp.classList.toggle('open');b.setAttribute('aria-expanded',o)});document.addEventListener('click',function(e){if(!lp.contains(e.target)){lp.classList.remove('open');b.setAttribute('aria-expanded','false')}});document.addEventListener('keydown',function(e){if(e.key==='Escape'){lp.classList.remove('open');b.setAttribute('aria-expanded','false');b.blur()}});})();</script>
 </div>
+<button type="button" id="toTop" aria-label="Back to top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+<script>
+(function(){
+  var b=document.getElementById('toTop');
+  function f(){b.classList.toggle('show',(window.pageYOffset||document.documentElement.scrollTop)>600);}
+  window.addEventListener('scroll',f,{passive:true});f();
+  b.addEventListener('click',function(){window.scrollTo({top:0});});
+})();
+</script>
 </body>
 </html>
