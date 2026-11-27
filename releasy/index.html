@@ -296,7 +296,7 @@ function ease(p){return p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2}
 function view(v){var s=v.s,tx=W/2-v.x*k*s,ty=H/2-v.y*k*s;tx=clamp(tx,W-W*s,0);ty=clamp(ty,H-H*s,0);return{tx:tx,ty:ty,s:s}}
 function lerpV(a,b,p){var A=view(a),B=view(b);return{tx:A.tx+(B.tx-A.tx)*p,ty:A.ty+(B.ty-A.ty)*p,s:A.s+(B.s-A.s)*p}}
 var hover=false,sticky=false,passed=false,animUntil=0;
-function bandFor(){var open=W<700||(hover&&!passed);return open?Math.round(H):Math.round(W*0.355)}
+function bandFor(){var open=W<700||(!passed&&(hover||sticky));return open?Math.round(H):Math.round(W*0.355)}
 function applyBand(){var h=bandFor()+2;stage.classList.toggle('small',bandFor()<H-1);if(stage.style.height!==h+'px'){stage.style.height=h+'px';animUntil=performance.now()+700;if(!playing)settle()}}
 function settle(){draw();if(performance.now()<animUntil)requestAnimationFrame(settle)}
 function size(){W=stage.clientWidth;H=W*IH/IW;k=W/IW;layers.style.height=hls.style.height=H+'px';Object.keys(els).forEach(function(n){els[n].style.width=W+'px';els[n].style.height=H+'px'});applyBand();draw()}
@@ -323,7 +323,10 @@ function seek(ms){t=ms+(reduce?DUR-200:600);if(reduce){userPaused=true}draw();up
 var root=document.getElementById('tourAnim');
 var px=-1,py=-1;
 function inside(){var r=root.getBoundingClientRect();return px>=r.left&&px<=r.right&&py>=r.top&&py<=r.bottom}
-function recheck(){var top=root.getBoundingClientRect().top,ps=top<=-40,h=!ps&&inside();if(ps!==passed||h!==hover){passed=ps;hover=h;applyBand()}}
+function recheck(){var top=root.getBoundingClientRect().top,vh=window.innerHeight||document.documentElement.clientHeight,ps=top<=-40,h=!ps&&inside();
+ // 'about centered': the middle of the small banner has reached the centre area of the screen (measured on the small size, so growing never changes the answer)
+ var st=!ps&&(top+Math.round(W*0.355)/2)<=vh*0.62;
+ if(ps!==passed||h!==hover||st!==sticky){passed=ps;hover=h;sticky=st;applyBand()}}
 // starts small; grows while the pointer is over it (also when the page scrolls under a resting pointer), shrinks when it leaves or is scrolled past
 document.addEventListener('mousemove',function(e){px=e.clientX;py=e.clientY;recheck()},{passive:true});
 root.addEventListener('mouseleave',recheck);document.documentElement.addEventListener('mouseleave',function(){px=-1;py=-1;recheck()});
