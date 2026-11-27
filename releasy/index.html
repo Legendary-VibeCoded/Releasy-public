@@ -225,11 +225,11 @@ dialog#nosale button:focus-visible{outline:2px solid #8FA2FF;outline-offset:3px}
     <button class="ta-pp" id="taPp" type="button" aria-label="Pause animation"><svg viewBox="0 0 16 16" id="taPpi"><rect x="3" y="2" width="3.5" height="12"/><rect x="9.5" y="2" width="3.5" height="12"/></svg></button>
   </div>
   <div class="ta-bar" id="taBar"></div>
-</div></div>
+</div>
 <script>
 (function(){
 var IMG={editor:"/releasy/img/editor-v2.webp",light:"/releasy/img/looks-v2.webp",oled:"/releasy/img/tour-oled.webp",sunset:"/releasy/img/tour-sunset.webp",lyrics:"/releasy/img/lyrics-v2.webp",planner2:"/releasy/img/planner-v2.webp",export:"/releasy/img/export-v2.webp"};
-var IW=1442,IH=932,DUR=2200;
+var IW=1442,IH=932,DUR=3700;
 var S=[
  {img:'editor',n:'Step 1',t:'Add your track',d:'A WAV or MP3 plus your cover art. Your music stays on your computer.',v:{x:190,y:300,s:1.5},h:[[38,232,324,60],[38,435,324,60]]},
  {img:'editor',n:'Step 2',t:'Pick your moments',d:'Choose snippets right on the waveform.',v:{x:900,y:760,s:1.5},h:[[404,727,1000,96]]},
@@ -261,7 +261,7 @@ function draw(){
  var sameImg=prev.img===sc.img;
  Object.keys(els).forEach(function(n){els[n].style.opacity=0;els[n].style.zIndex=0});
  if(!sameImg){var pv=view(prev.v);els[prev.img].style.opacity=1;els[prev.img].style.zIndex=1;els[prev.img].style.transform='translate('+pv.tx+'px,'+pv.ty+'px) scale('+pv.s+')'}
- var p=ease(clamp(lt/(DUR-150),0,1)),v=lerpV(sc.start,sc.v,p);
+ var p=ease(clamp(lt/2200,0,1)),v=lerpV(sc.start,sc.v,p);
  var el=els[sc.img];el.style.zIndex=2;el.style.opacity=sameImg?1:clamp(lt/450,0,1);el.style.transform='translate('+v.tx+'px,'+v.ty+'px) scale('+v.s+')';
  S.forEach(function(s2,j){s2.hs.forEach(function(h){h.style.opacity=0})});
  var ha=j0(lt);sc.h.forEach(function(r,j){var h=sc.hs[j];h.style.left=(v.tx+r[0]*k*v.s-4)+'px';h.style.top=(v.ty+r[1]*k*v.s-4)+'px';h.style.width=(r[2]*k*v.s+8)+'px';h.style.height=(r[3]*k*v.s+8)+'px';h.style.opacity=ha});
