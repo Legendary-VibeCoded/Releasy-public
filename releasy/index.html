@@ -232,12 +232,17 @@ dialog#nosale button:focus-visible{outline:2px solid #8FA2FF;outline-offset:3px}
 #tourAnim{--line:#2A3147;--fg:#EEF0F6;--mut:#A9B0C3;--acc2:#8FA2FF;--hl:#8FA2FF;margin-top:48px}
 #tourAnim *{box-sizing:border-box}
 
-.ta-stage{position:relative;width:100%;aspect-ratio:1442/932;overflow:hidden;border-radius:14px;border:1px solid var(--line);background:#000;max-width:100%;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ta-stage{position:relative;width:100%;aspect-ratio:1442/932;transition:height .55s cubic-bezier(.4,0,.2,1);overflow:hidden;border-radius:14px;border:1px solid var(--line);background:#000;max-width:100%;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ta-pan{position:absolute;left:0;top:0;width:100%;transition:transform .35s ease-out}
+#taLayers{z-index:0}
+#taHls{z-index:6;pointer-events:none}
+@media (prefers-reduced-motion:reduce){.ta-stage,.ta-pan{transition:none}}
 .ta-layer{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform,opacity}
 .ta-layer img{display:block;width:100%;height:100%;user-select:none;-webkit-user-drag:none}
 .ta-hl{position:absolute;z-index:6;border:2px solid var(--hl);border-radius:8px;box-shadow:0 0 0 3px rgba(143,162,255,.25),0 0 22px rgba(143,162,255,.45);opacity:0;pointer-events:none}
 .ta-cap{position:absolute;z-index:5;left:0;right:0;bottom:0;padding:56px 24px 20px;background:linear-gradient(to top,rgba(8,10,16,.92),rgba(8,10,16,.55) 55%,transparent);color:#EEF0F6;pointer-events:none;transition:opacity .35s ease}
 .ta-cap .n{font:600 12px 'Inter',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#8FA2FF;margin-bottom:6px}
+.ta-stage.small .ta-cap{padding:30px 20px 12px}.ta-stage.small .ta-cap .d{display:none}.ta-stage.small .ta-cap .t{font-size:clamp(18px,2.4vw,24px)}
 .ta-cap .t{font:700 clamp(20px,3.2vw,32px)/1.1 'Space Grotesk',sans-serif;letter-spacing:-.01em;margin:0 0 4px}
 .ta-cap .d{font-size:clamp(13px,1.6vw,17px);color:#C5CBDB;margin:0;max-width:40em}
 .ta-pp{position:absolute;z-index:7;right:14px;top:14px;width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(8,10,16,.6);color:#fff;display:grid;place-items:center;cursor:pointer;opacity:.0;transition:opacity .2s}
@@ -255,8 +260,8 @@ dialog#nosale button:focus-visible{outline:2px solid #8FA2FF;outline-offset:3px}
 @media (max-width:600px){.ta-cap{padding:36px 14px 12px}.ta-cap .d{display:none}.ta-cap .n{margin-bottom:3px}}
 </style>
 <div id="tourAnim"><div class="ta-stage" id="taStage" role="img" aria-label="Animated tour of Releasy: add your track, pick your moments, choose a look, switch formats, match your mood, time your lyrics, plan the rollout and export everything">
-    <div id="taLayers"></div>
-    <div id="taHls"></div>
+    <div class="ta-pan" id="taLayers"></div>
+    <div class="ta-pan" id="taHls"></div>
     <div class="ta-cap" id="taCap"><div class="n" id="taCapN"></div><p class="t" id="taCapT"></p><p class="d" id="taCapD"></p></div>
     <button class="ta-pp" id="taPp" type="button" aria-label="Pause animation"><svg viewBox="0 0 16 16" id="taPpi"><rect x="3" y="2" width="3.5" height="12"/><rect x="9.5" y="2" width="3.5" height="12"/></svg></button>
   </div>
@@ -290,7 +295,11 @@ function clamp(x,a,b){return Math.max(a,Math.min(b,x))}
 function ease(p){return p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2}
 function view(v){var s=v.s,tx=W/2-v.x*k*s,ty=H/2-v.y*k*s;tx=clamp(tx,W-W*s,0);ty=clamp(ty,H-H*s,0);return{tx:tx,ty:ty,s:s}}
 function lerpV(a,b,p){var A=view(a),B=view(b);return{tx:A.tx+(B.tx-A.tx)*p,ty:A.ty+(B.ty-A.ty)*p,s:A.s+(B.s-A.s)*p}}
-function size(){W=stage.clientWidth;H=W*IH/IW;k=W/IW;Object.keys(els).forEach(function(n){els[n].style.width=W+'px';els[n].style.height=H+'px'});draw()}
+var hover=false,sticky=false,passed=false,animUntil=0;
+function bandFor(){var open=W<700||((hover||sticky)&&!passed);return open?Math.round(H):Math.round(W*0.355)}
+function applyBand(){var h=bandFor()+2;stage.classList.toggle('small',bandFor()<H-1);if(stage.style.height!==h+'px'){stage.style.height=h+'px';animUntil=performance.now()+700;if(!playing)settle()}}
+function settle(){draw();if(performance.now()<animUntil)requestAnimationFrame(settle)}
+function size(){W=stage.clientWidth;H=W*IH/IW;k=W/IW;layers.style.height=hls.style.height=H+'px';Object.keys(els).forEach(function(n){els[n].style.width=W+'px';els[n].style.height=H+'px'});applyBand();draw()}
 function setCaption(i){if(i===curIdx)return;curIdx=i;var sc=S[i];cap.style.opacity=0;setTimeout(function(){if(curIdx!==i)return;capN.textContent=sc.n+' of '+S.length;capT.textContent=sc.t;capD.textContent=sc.d;cap.style.opacity=1},180);segs.forEach(function(b,j){if(j===i)b.setAttribute('aria-current','true');else b.removeAttribute('aria-current')})}
 function draw(){
  var T=((t%(DUR*S.length))+DUR*S.length)%(DUR*S.length),i=Math.floor(T/DUR),lt=T-i*DUR,sc=S[i],prev=S[(i+S.length-1)%S.length];
@@ -301,6 +310,9 @@ function draw(){
  var el=els[sc.img];el.style.zIndex=2;el.style.opacity=sameImg?1:clamp(lt/450,0,1);el.style.transform='translate('+v.tx+'px,'+v.ty+'px) scale('+v.s+')';
  S.forEach(function(s2,j){s2.hs.forEach(function(h){h.style.opacity=0})});
  var ha=j0(lt);sc.h.forEach(function(r,j){var h=sc.hs[j];h.style.left=(v.tx+r[0]*k*v.s-4)+'px';h.style.top=(v.ty+r[1]*k*v.s-4)+'px';h.style.width=(r[2]*k*v.s+8)+'px';h.style.height=(r[3]*k*v.s+8)+'px';h.style.opacity=ha});
+ var bandH=stage.clientHeight,oy=0;
+ if(bandH<H-1){var y0=1e9,y1=0;sc.h.forEach(function(r){y0=Math.min(y0,r[1]);y1=Math.max(y1,r[1]+r[3])});var fy=v.ty+(y0+y1)/2*k*v.s;oy=clamp(bandH*0.38-fy,bandH-H,0)}
+ layers.style.transform=hls.style.transform='translateY('+oy.toFixed(1)+'px)';
  setCaption(i);
  segs.forEach(function(b,j){b.firstChild.firstChild.style.width=(j<i?100:j===i?(lt/DUR*100):0)+'%'});
 }
@@ -308,6 +320,13 @@ function j0(lt){var a=clamp((lt-900)/350,0,1),b=1-clamp((lt-(DUR-300))/250,0,1);
 function frame(ts){if(!playing)return;if(!last)last=ts;t+=Math.min(60,ts-last);last=ts;draw();requestAnimationFrame(frame)}
 function update(){var want=!userPaused&&visible&&!reduce&&!document.hidden;if(want&&!playing){playing=true;last=0;requestAnimationFrame(frame)}else if(!want){playing=false}stage.classList.toggle('paused',userPaused||reduce);ppi.innerHTML=(userPaused||reduce)?'<path d="M4 2l10 6-10 6z"/>':'<rect x="3" y="2" width="3.5" height="12"/><rect x="9.5" y="2" width="3.5" height="12"/>';pp.setAttribute('aria-label',(userPaused||reduce)?'Play animation':'Pause animation')}
 function seek(ms){t=ms+(reduce?DUR-200:600);if(reduce){userPaused=true}draw();update()}
+var root=document.getElementById('tourAnim');
+root.addEventListener('mouseenter',function(){hover=true;applyBand()});
+root.addEventListener('mouseleave',function(){hover=false;applyBand()});
+function onScroll(){var top=root.getBoundingClientRect().top,vh=window.innerHeight||document.documentElement.clientHeight;
+ var ps=top<=-40,st=!ps&&top<vh*0.55;
+ if(ps!==passed||st!==sticky){passed=ps;sticky=st;applyBand()}}
+window.addEventListener('scroll',onScroll,{passive:true});onScroll();
 stage.addEventListener('click',function(){if(reduce){reduce=false;userPaused=false}else userPaused=!userPaused;update()});
 document.addEventListener('visibilitychange',update);
 var loaded=false;function load(){if(loaded)return;loaded=true;Object.keys(els).forEach(function(n){var im=els[n].firstChild;im.src=im.dataset.src})}
