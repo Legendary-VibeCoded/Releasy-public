@@ -324,11 +324,11 @@ var root=document.getElementById('tourAnim');
 var px=-1,py=-1;
 function inside(){var r=root.getBoundingClientRect();return px>=r.left&&px<=r.right&&py>=r.top&&py<=r.bottom}
 function recheck(){var top=root.getBoundingClientRect().top,vh=window.innerHeight||document.documentElement.clientHeight,h=inside();
- // 'about centered': the middle of the small banner has reached the centre area of the screen (measured on the small size, so growing never changes the answer).
- // Once it is open it stays open while scrolling down; scrolling back up above that point closes it again.
- var st=(top+Math.round(W*0.355)/2)<=vh*0.62;
+ // opens when the top of the animation is nearing the top of the window (the text above it is scrolling away).
+ // Once open it stays open while scrolling down; scrolling back up above that point closes it again.
+ var st=top<=vh*0.2;
  if(h!==hover||st!==sticky){hover=h;sticky=st;applyBand()}}
-// starts small; grows while the pointer is over it (also when the page scrolls under a resting pointer) or when scrolled to about the centre of the screen
+// starts small; grows while the pointer is over it (also when the page scrolls under a resting pointer) or when its top nears the top of the window
 document.addEventListener('mousemove',function(e){px=e.clientX;py=e.clientY;recheck()},{passive:true});
 root.addEventListener('mouseleave',recheck);document.documentElement.addEventListener('mouseleave',function(){px=-1;py=-1;recheck()});
 window.addEventListener('scroll',recheck,{passive:true});
