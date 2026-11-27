@@ -6,11 +6,11 @@
     var S=48,c=document.createElement('canvas');c.width=c.height=S;var x=c.getContext('2d');
     var running=false;
     function frame(p){
-      x.clearRect(0,0,S,S);x.save();x.beginPath();x.arc(S/2,S/2,S/2,0,7);x.clip();
+      x.clearRect(0,0,S,S);x.save();x.beginPath();x.arc(S/2,S/2,S*0.458,0,7);x.clip();
       x.drawImage(img,0,0,S,S);
       var cx=-S*0.4+p*S*1.8;
-      var g=x.createLinearGradient(cx-S*0.28,0,cx+S*0.28,S*0.3);
-      g.addColorStop(0,'rgba(255,255,255,0)');g.addColorStop(.5,'rgba(255,255,255,.9)');g.addColorStop(1,'rgba(255,255,255,0)');
+      var g=x.createLinearGradient(cx-S*0.25,0,cx+S*0.25,S*0.27);
+      g.addColorStop(0,'rgba(255,255,255,0)');g.addColorStop(.22,'rgba(255,255,255,.18)');g.addColorStop(.5,'rgba(255,255,255,.9)');g.addColorStop(.78,'rgba(255,255,255,.18)');g.addColorStop(1,'rgba(255,255,255,0)');
       x.fillStyle=g;x.fillRect(0,0,S,S);x.restore();
       return c.toDataURL('image/png');
     }
@@ -19,7 +19,7 @@
       var olds=[].slice.call(document.querySelectorAll('link[rel~="icon"]'));
       var a=document.createElement('link');a.rel='icon';a.type='image/png';
       olds.forEach(function(l){l.parentNode.removeChild(l)});document.head.appendChild(a);
-      var t0=performance.now(),D=800;
+      var t0=performance.now(),D=560;
       (function step(t){
         var p=Math.min(1,(t-t0)/D);a.href=frame(p);
         if(p<1)setTimeout(function(){step(performance.now())},40);
